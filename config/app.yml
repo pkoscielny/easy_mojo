@@ -1,0 +1,19 @@
+---
+hypnotoad:
+  listen:
+    - 'http://*:8080'
+
+app_secret_passphrase:
+  - 'My very secret passphrase.' 
+
+# Logging levels order: trace, debug, info, warn, error, fatal.
+#log4perl_config_file: config/log4perl.conf  # if you need to switch to log4perl.
+# log_file_path: /tmp/easy_mojo.log # /var/log/easy_mojo.log  # commented means the whole output goes to STDERR.
+# log_level: info
+log_level: trace
+
+# Automatic pluralize each route except for routes with alt_route field.
+route_pluralization: true
+
+# Common route prefix for all routes.
+route_prefix: /api

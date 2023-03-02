@@ -1,0 +1,39 @@
+---
+# App::Controller::REST::V1::Foo
+- package_name: V1::Foo
+  # alt_route is optional. If you want to use a different route than the one implied by the package name.
+  # Lack of automatic pluralization.
+  alt_route: /api/v1/alt_foo 
+  actions:
+    - get
+    - list
+- package_name: V1::Bar
+  actions:
+    - get
+    - add
+    - update
+    - delete
+    - list
+    - action: custom_action1
+      method: POST
+      placeholders:  # the order is important.
+        - id
+        - name
+    - action: custom_action2
+      method: POST
+- package_name: V2::Product
+  actions:
+    - get
+    - add
+    - list
+    - patch  #TODO
+- package_name: V2::Category
+  actions:
+    - list
+- package_name: V2::Post
+  actions:
+    - get
+    - add
+    - update
+    - delete
+    - list

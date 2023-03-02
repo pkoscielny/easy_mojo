@@ -1,0 +1,30 @@
+---
+#TODO: think about: db.yml example file or dotenv? E.g. each stage will have it's own set of databases (dsns). This file should contain set of databases for one stage. 
+# DSN -> driver, creds, host, username, passwd, etc.
+alpha:  # virtual db name (DSN)
+  driver: sqlite
+  database: alpha.db
+  domain: dev
+bravo:
+  driver: sqlite
+  database: bravo.db
+  domain: dev
+# one_pg:
+#   driver: 'pg'
+#   database: 'one'
+#   domain: 'dev'
+#   host: 'localhost'
+#   username: 'username'
+#   password: '***'
+# one_mysql:
+#   disabled: 1
+#   driver: 'mysql'
+#   database: 'one'
+#   domain: 'dev'
+#   host: 'localhost'
+#   username: 'username'
+#   password: '***'
+#   post_connect_sql:
+#     - 'SET NAMES utf8'
+#   mysql_enable_utf8: 1
+#   mysql_auto_reconnect: 1
