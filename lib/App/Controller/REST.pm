@@ -102,6 +102,7 @@ sub _get_resource {
 
     my $id = $self->param('id');
     my $related = $self->get_related;
+    #TODO: implement fetching related objects.
 
     return $self->model->get_object($id);
 }
@@ -134,6 +135,8 @@ sub list {
     $self->log->debug('list params: '. Dumper $list_params);
 
     my $resource = $self->get_resource_list(%$list_params); # || $self->response_empty_list;
+    
+    $resource = $self->model->filter_out_unreadable_fields($resource);
 
     $self->response(data => $resource);
 }
@@ -148,6 +151,7 @@ sub get {
     $self->log->debug('resource: '. Dumper $resource);
 
     $self->_authorize_params($resource);
+    $resource = $self->model->filter_out_unreadable_fields($resource);
 
     $self->response(data => $resource);
 }
@@ -164,8 +168,9 @@ sub add {
     $self->_authorize_params($params);
 
     my $resource = $self->model->add_object(%$params);
-    $self->log->debug('added object: '. Dumper $resource);
+    $resource = $self->model->filter_out_unreadable_fields($resource);
 
+    $self->log->debug('added object: '. Dumper $resource);
     $self->response(data => $resource);
 }
 
@@ -184,6 +189,21 @@ sub update {
     $self->_authorize_params($params);
 
     $resource = $self->model->update_object($id, %$params);
+    $resource = $self->model->filter_out_unreadable_fields($resource);
+
+    $self->response(data => $resource);
+}
+
+
+#TODO: to implement.
+sub patch {
+    my ($self) = @_;
+    $self->log->info('patch');
+
+    my $resource = $self->_get_resource() || $self->response_404;
+    # $self->log->debug('PARAMS: ', Dumper $params);
+
+    $resource = $self->model->filter_out_unreadable_fields($resource);
 
     $self->response(data => $resource);
 }
@@ -199,23 +219,11 @@ sub delete {
     $self->_authorize_params($resource);
 
     $resource = $self->model->delete_object($id);
+    $resource = $self->model->filter_out_unreadable_fields($resource);
+
     $self->log->debug('deleted object: '. Dumper $resource);
-
     $self->response(data => $resource);
 }
-
-
-#TODO: to implement.
-sub patch {
-    my ($self) = @_;
-    $self->log->info('patch');
-
-    my $resource = $self->_get_resource() || $self->response_404;
-    # $self->log->debug('PARAMS: ', Dumper $params);
-
-    $self->response(data => $resource);
-}
-
 
 
 

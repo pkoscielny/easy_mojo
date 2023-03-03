@@ -6,6 +6,10 @@ use warnings;
 use base qw(Model::API);
 
 
+# The readable_fields and the writable_fields are optional.
+sub readable_fields {()}
+sub writable_fields {()}
+
 sub _url_base { 'https://dummyjson.com' }
 
 sub _url_add    { $_[0]->_url_get(). '/add' }

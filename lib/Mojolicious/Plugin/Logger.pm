@@ -6,16 +6,17 @@ use warnings;
 use base 'Mojolicious::Plugin';
 #use MojoX::Log::Log4perl;
 use Mojo::Log;
-use Data::Dumper;
 
-my %log_level = map { $_ => 1 } qw/
+
+=head1
+Mojo::Log logging levels order:
     trace
     debug
     info
     warn
     error
     fatal
-/;
+=cut
 
 sub register {
     my ($self, $app, $conf) = @_;

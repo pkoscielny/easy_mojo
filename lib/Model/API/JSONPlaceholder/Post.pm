@@ -15,6 +15,16 @@ sub _url_get {
 }
 
 
+# What you want to see.
+sub readable_fields {qw/
+    id
+    title
+    body
+    reactions
+    tags
+/}
+
+
 # What you want to save.
 sub writable_fields {qw/
     title

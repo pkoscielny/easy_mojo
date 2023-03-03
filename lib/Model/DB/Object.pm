@@ -47,35 +47,14 @@ sub get_dbh {
 sub readable_fields {()}
 sub writable_fields {()}
 
-sub get_fields {
-    my ($self) = @_;
-
-    my $rh_object = $self->as_tree;
-    my @readable_fields = $self->readable_fields or return $rh_object;
-    # return $rh_object unless @readable_fields;
-
-    return { map { $_ => $rh_object->{$_} } @readable_fields };
-}
-
-
-#TODO: implement set fields cascade: https://metacpan.org/pod/Rose::DB::Object#OBJECT-METHODS
+#TODO: reimplement set_fields - implement set fields cascade: https://metacpan.org/pod/Rose::DB::Object#OBJECT-METHODS
 sub set_fields {
     my ($self, %params) = @_;
 # warn "set_fields: params: ", Dumper \%params;
 
-    my %writable_fields = map { $_ => 1 } $self->writable_fields;
-
-    # Filter out forbidden fields only if writable fields are given.
-    if (%writable_fields) {
-        my @all_fields = keys %params;
-
-        foreach my $field (@all_fields) {
-            delete $params{$field} unless exists $writable_fields{$field};
-        }
-        #map { delete $params{$_} unless exists $writable_fields{$_} } @all_fields;
-    }
-
+    $self->filter_out_unwritable_fields(\%params);
 # warn "set_fields: params filtered: ", Dumper \%params;
+
     while (my($field, $value) = each %params) {
         $self->$field($value);
     }
@@ -107,7 +86,7 @@ sub get_object {
     ) = @_;
 
     my $object = $class->_get_object($id, %params) || return undef;
-    return $object->get_fields();
+    return $object->as_tree;
 }
 
 
@@ -123,7 +102,7 @@ sub get_object_list {
         #debug => 1, # watch SQL queries directly
     );
 
-    return [ map { $_->get_fields() } @$objects ];
+    return [ map { $_->as_tree } @$objects ];
 }
 
 
@@ -135,7 +114,7 @@ sub add_object {
     $object->set_fields(%params);
     $object->save(cascade => 1);
 
-    return $object->get_fields();
+    return $object->as_tree;
 }
 
 
@@ -148,7 +127,7 @@ sub update_object {
     $object->set_fields(%params);
     $object->save(cascade => 1);  # changes_only => 1
 
-    return $object->get_fields();
+    return $object->as_tree;
 }
 
 
@@ -159,7 +138,7 @@ sub delete_object {
     my $object = $class->_get_object($id);
     $object->delete();  # cascade => 1 ?
 
-    return $object->get_fields();
+    return $object->as_tree;
 }
 
 

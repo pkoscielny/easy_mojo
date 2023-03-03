@@ -63,4 +63,41 @@ sub writable_fields {
 }
 
 
+#TODO: think about extending this feature to related objects.
+sub filter_out_unreadable_fields {
+    my ($class, $resource) = @_;
+    return $resource unless $resource;
+
+    my @readable_fields = $class->readable_fields or return $resource;
+    my %readable_fields = map { $_ => 1 } @readable_fields;
+
+    my $resources = ref $resource eq 'ARRAY' ? $resource : [$resource];
+    foreach my $res (@$resources) {
+        foreach my $field (keys %$res) {
+            delete $res->{$field} unless exists $readable_fields{$field};
+        }
+    }
+
+    return $resource;
+}
+
+
+sub filter_out_unwritable_fields {
+    my ($class, $params) = @_;
+
+    # Filter out forbidden fields only if writable fields are given.
+    my @writable_fields = $class->writable_fields or return $params;
+    my %writable_fields = map { $_ => 1 } @writable_fields;
+
+    foreach my $field (keys %$params) {
+        delete $params->{$field} unless exists $writable_fields{$field};
+    }
+    #my @all_fields = keys %$params;
+    #map { delete $params{$_} unless exists $writable_fields{$_} } @all_fields;
+
+    return $params;
+}
+
+
+
 1;
