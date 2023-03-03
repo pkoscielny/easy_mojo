@@ -25,6 +25,7 @@
   actions:
     - get
     - add
+    - update
     - list
     - patch  #TODO
 - package_name: V2::Category

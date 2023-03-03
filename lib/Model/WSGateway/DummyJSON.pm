@@ -1,9 +1,9 @@
-package Model::API::DummyJSON;
+package Model::WSGateway::DummyJSON;
 
 use strict;
 use warnings;
 
-use base qw(Model::API);
+use base qw(Model::WSGateway);
 
 
 # The readable_fields and the writable_fields are optional.

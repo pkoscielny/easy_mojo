@@ -5,8 +5,8 @@ use warnings;
 
 use Mojo::Base 'App::Controller::REST';
 
-use Model::API::JSONPlaceholder::Post;
-has model => 'Model::API::JSONPlaceholder::Post';
+use Model::WSGateway::JSONPlaceholder::Post;
+has model => 'Model::WSGateway::JSONPlaceholder::Post';
 
 
 

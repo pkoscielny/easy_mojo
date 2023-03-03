@@ -1,4 +1,4 @@
-package Model::API;
+package Model::WSGateway;
 
 use strict;
 use warnings;
@@ -12,7 +12,7 @@ use Mojo::UserAgent;
 
 my $ua = Mojo::UserAgent->new;
 
-# Basic Model::API uses blocking requests.
+# Basic Model::WSGateway uses blocking requests.
 # https://docs.mojolicious.org/Mojo/UserAgent
 
 #TODO: https://docs.mojolicious.org/Mojolicious/Guides/Cookbook#Backend-web-services
@@ -79,8 +79,8 @@ sub add_object {
 
 
 sub update_object {
-    my ($class, %params) = @_;
-    my $url = join '/', $class->_url_base(), $class->_url_update(%params);
+    my ($class, $id, %params) = @_;
+    my $url = join '/', $class->_url_base(), $class->_url_update($id, %params);
 
     my $res = $ua
         ->max_redirects(5)
@@ -114,7 +114,7 @@ sub delete_object {
 }
 
 
-### Model::API specific methods:
+### Model::WSGateway specific methods:
 
 #TODO: get_url ?
 

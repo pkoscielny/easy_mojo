@@ -1,11 +1,11 @@
-package Model::API::DummyJSON::Product;
+package Model::WSGateway::DummyJSON::Product;
 
-# carton exec perl -Ilib -e 'use strict; use warnings; use Model::API::DummyJSON::Product;'
+# carton exec perl -Ilib -e 'use strict; use warnings; use Model::WSGateway::DummyJSON::Product;'
 
 use strict;
 use warnings;
 
-use base qw(Model::API::DummyJSON);
+use base qw(Model::WSGateway::DummyJSON);
 
 # https://dummyjson.com/products
 

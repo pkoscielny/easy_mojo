@@ -5,8 +5,8 @@ use warnings;
 
 use Mojo::Base 'App::Controller::REST';
 
-use Model::API::DummyJSON::Product;
-has model => 'Model::API::DummyJSON::Product';
+use Model::WSGateway::DummyJSON::Product;
+has model => 'Model::WSGateway::DummyJSON::Product';
 
 
 1;

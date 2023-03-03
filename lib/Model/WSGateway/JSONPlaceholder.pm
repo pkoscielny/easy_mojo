@@ -1,9 +1,9 @@
-package Model::API::JSONPlaceholder;
+package Model::WSGateway::JSONPlaceholder;
 
 use strict;
 use warnings;
 
-use base qw(Model::API);
+use base qw(Model::WSGateway);
 
 
 # The readable_fields and the writable_fields are optional.

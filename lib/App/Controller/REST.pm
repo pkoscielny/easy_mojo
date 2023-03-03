@@ -181,6 +181,7 @@ sub update {
 
     my $id = $self->param('id');
     my $resource = $self->_get_resource() || $self->response_404;
+    $self->log->debug('resource: '. Dumper $resource);
 
     my $params = $self->req->json || $self->response_400('EMPTY_JSON_PARAMS');
     $self->log->debug('params: '. Dumper $params);

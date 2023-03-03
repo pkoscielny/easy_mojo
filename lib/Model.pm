@@ -6,7 +6,7 @@ use warnings;
 =head1
 
 Model::DB - db layer based on Rose::DB. The naming convention is Model::DB::<DSN>::<table>.
-Model::API - call to other API. Change name to Model::Gateway ?
+Model::WSGateway - call to other web services.
 App::Controller::REST has default resource object (throw exception) but in specific resource will be one of Model::*
 
 The *_object is because some of method names like 'update' are reserved by Rose::DB::Object.
@@ -18,8 +18,8 @@ Model::DB::Object (Rose::DB::Object, Model) - init_db, get_dsn, get_dbh, load_by
 Model::DB::Alpha (Model::DB::Object) - sub get_dsn {'alpha'} 
 Model::DB::Alpha::Foo (Model::DB::Alpha) - table 
 
-Model::API (Model) - implemented
-Model::API::ExampleCom:
+Model::WSGateway (Model) - implemented
+Model::WSGateway::ExampleCom:
 https://docs.mojolicious.org/Mojolicious/Guides/Cookbook#Backend-web-services
 https://docs.mojolicious.org/Mojolicious/Guides/Cookbook#REST-web-services
 https://dummyjson.com/

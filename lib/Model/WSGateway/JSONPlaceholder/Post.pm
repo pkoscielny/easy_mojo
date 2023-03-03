@@ -1,11 +1,11 @@
-package Model::API::JSONPlaceholder::Post;
+package Model::WSGateway::JSONPlaceholder::Post;
 
-# carton exec perl -Ilib -e 'use strict; use warnings; use Model::API::JSONPlaceholder::Post;'
+# carton exec perl -Ilib -e 'use strict; use warnings; use Model::WSGateway::JSONPlaceholder::Post;'
 
 use strict;
 use warnings;
 
-use base qw(Model::API::DummyJSON);
+use base qw(Model::WSGateway::JSONPlaceholder);
 
 # https://jsonplaceholder.typicode.com/posts
 
