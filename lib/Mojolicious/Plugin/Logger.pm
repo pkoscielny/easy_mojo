@@ -21,7 +21,7 @@ Mojo::Log logging levels order:
 sub register {
     my ($self, $app, $conf) = @_;
 
-    # $app->log( MojoX::Log::Log4perl->new($conf->{log4perl_config_file}) );
+    # $app->log( MojoX::Log::Log4perl->new($ENV{LOG4PERL_CONFIG_FILE}) );
 
     $app->log(Mojo::Log->new(
         path => $conf->{log_file_path},

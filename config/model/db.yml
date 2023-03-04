@@ -1,6 +1,10 @@
----
-#TODO: think about: db.yml example file or dotenv? E.g. each stage will have it's own set of databases (dsns). This file should contain set of databases for one stage. 
+# DB configs.
+# Here is a place for the common parts of these configs. 
+# You can set the rest of these configs like usernames, passwords, hosts as env vars 
+#   (config/.env or docker compose files or just setup env vars).
 # DSN -> driver, creds, host, username, passwd, etc.
+# Do not use multiple '_' characters consecutively in DSN name.
+---
 alpha:  # virtual db name (DSN)
   driver: sqlite
   database: alpha.db
@@ -9,6 +13,7 @@ bravo:
   driver: sqlite
   database: bravo.db
   domain: dev
+  password:
 # one_pg:
 #   driver: 'pg'
 #   database: 'one'

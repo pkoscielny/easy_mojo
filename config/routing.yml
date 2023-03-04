@@ -1,3 +1,5 @@
+# This kind of config should be fully stored in the version control system without being overwritten by any env var.
+# If you want to turn off some route you can just comment it out.
 ---
 # App::Controller::REST::V1::Foo
 - package_name: V1::Foo

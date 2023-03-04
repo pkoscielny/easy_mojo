@@ -3,6 +3,7 @@ package App;
 
 =head1
 
+# carton install
 # carton exec script/app.pl routes -v
 # carton exec morbo -l  "http://*:3001" script/app.pl -w .
 # http://127.0.0.1:3001/api/v1/bar/1.json
@@ -31,6 +32,7 @@ $SIG{__DIE__} = \&confess;
 use YAML::XS;
 use Template::Simple;
 use Text::Pluralize;
+use Dotenv -load => 'config/.env';
 
 use Mojo::Base 'Mojolicious';
 use Mojo::Util qw( decamelize );
@@ -42,11 +44,12 @@ use Data::Dumper;
 sub startup {
     my ($self) = @_;
     
+    $self->setup_plugins();
+
     # Set unique passphrase for cookies.
     # https://docs.mojolicious.org/Mojolicious#secrets
     $self->secrets($self->config->{app_secret_passphrase});
 
-    $self->setup_plugins();
     $self->setup_rest_config();
     $self->setup_routing();
 
@@ -70,8 +73,8 @@ sub setup_plugins {
     $self->plugin('Request');
 
     $self->plugin('Logger' => {
-        log_file_path => $self->config->{log_file_path},
-        default_level => $self->config->{log_level},
+        log_file_path => $ENV{MOJO_LOG_FILE},
+        default_level => $ENV{MOJO_LOG_LEVEL},
     });
 
     #TODO: think about it. It will be good to have this functionality. Maybe simple returns routing.yaml content without comments?
