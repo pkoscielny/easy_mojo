@@ -28,7 +28,7 @@ sub register {
     # These cause problems with Test::NoWarnings;
     # First one can use only STDERR in console mode.
     # Second one also generates warning concerning format.
-    if ($ENV{MOJO_MODE} ne 'test') {
+    if ($app->mode ne 'test') {
         $app->log( MojoX::Log::Log4perl->new($ENV{LOG4PERL_CONFIG_FILE}) );
 
         # $app->log(Mojo::Log->new(

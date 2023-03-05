@@ -1,5 +1,35 @@
 # carton snapshot format: version 1.0
 DISTRIBUTIONS
+  Archive-Zip-1.68
+    pathname: P/PH/PHRED/Archive-Zip-1.68.tar.gz
+    provides:
+      Archive::Zip 1.68
+      Archive::Zip::Archive 1.68
+      Archive::Zip::BufferedFileHandle 1.68
+      Archive::Zip::DirectoryMember 1.68
+      Archive::Zip::FileMember 1.68
+      Archive::Zip::Member 1.68
+      Archive::Zip::MemberRead 1.68
+      Archive::Zip::MockFileHandle 1.68
+      Archive::Zip::NewFileMember 1.68
+      Archive::Zip::StringMember 1.68
+      Archive::Zip::Tree 1.68
+      Archive::Zip::ZipFileMember 1.68
+    requirements:
+      Compress::Raw::Zlib 2.017
+      Encode 0
+      ExtUtils::MakeMaker 0
+      File::Basename 0
+      File::Copy 0
+      File::Find 0
+      File::Path 0
+      File::Spec 0.80
+      File::Temp 0
+      IO::File 0
+      IO::Handle 0
+      IO::Seekable 0
+      Time::Local 0
+      perl 5.006
   B-Hooks-EndOfScope-0.26
     pathname: E/ET/ETHER/B-Hooks-EndOfScope-0.26.tar.gz
     provides:
@@ -803,6 +833,47 @@ DISTRIBUTIONS
       overload 0
       strict 0
       warnings 0
+  Excel-Writer-XLSX-1.10
+    pathname: J/JM/JMCNAMARA/Excel-Writer-XLSX-1.10.tar.gz
+    provides:
+      Excel::Writer::XLSX 1.10
+      Excel::Writer::XLSX::Chart 1.10
+      Excel::Writer::XLSX::Chart::Area 1.10
+      Excel::Writer::XLSX::Chart::Bar 1.10
+      Excel::Writer::XLSX::Chart::Column 1.10
+      Excel::Writer::XLSX::Chart::Doughnut 1.10
+      Excel::Writer::XLSX::Chart::Line 1.10
+      Excel::Writer::XLSX::Chart::Pie 1.10
+      Excel::Writer::XLSX::Chart::Radar 1.10
+      Excel::Writer::XLSX::Chart::Scatter 1.10
+      Excel::Writer::XLSX::Chart::Stock 1.10
+      Excel::Writer::XLSX::Chartsheet 1.10
+      Excel::Writer::XLSX::Drawing 1.10
+      Excel::Writer::XLSX::Examples 1.10
+      Excel::Writer::XLSX::Format 1.10
+      Excel::Writer::XLSX::Package::App 1.10
+      Excel::Writer::XLSX::Package::Comments 1.10
+      Excel::Writer::XLSX::Package::ContentTypes 1.10
+      Excel::Writer::XLSX::Package::Core 1.10
+      Excel::Writer::XLSX::Package::Custom 1.10
+      Excel::Writer::XLSX::Package::Metadata 1.10
+      Excel::Writer::XLSX::Package::Packager 1.10
+      Excel::Writer::XLSX::Package::Relationships 1.10
+      Excel::Writer::XLSX::Package::SharedStrings 1.10
+      Excel::Writer::XLSX::Package::Styles 1.10
+      Excel::Writer::XLSX::Package::Table 1.10
+      Excel::Writer::XLSX::Package::Theme 1.10
+      Excel::Writer::XLSX::Package::VML 1.10
+      Excel::Writer::XLSX::Package::XMLwriter 1.10
+      Excel::Writer::XLSX::Shape 1.10
+      Excel::Writer::XLSX::Utility 1.10
+      Excel::Writer::XLSX::Workbook 1.10
+      Excel::Writer::XLSX::Worksheet 1.10
+    requirements:
+      Archive::Zip 1.3
+      ExtUtils::MakeMaker 0
+      File::Temp 0.19
+      IO::File 1.14
   Exception-Class-1.45
     pathname: D/DR/DROLSKY/Exception-Class-1.45.tar.gz
     provides:
@@ -1274,6 +1345,14 @@ DISTRIBUTIONS
       IO::Socket::IP 0.37
       Sub::Util 1.41
       perl 5.016
+  Mojolicious-Plugin-ReplyTable-0.12
+    pathname: J/JB/JBERGER/Mojolicious-Plugin-ReplyTable-0.12.tar.gz
+    provides:
+      Mojolicious::Plugin::ReplyTable 0.12
+    requirements:
+      Module::Build::Tiny 0.034
+      Mojolicious 5.60
+      Text::CSV 0
   Mojolicious-Plugin-SwaggerUI-v0.0.4
     pathname: M/MA/MARGHI/Mojolicious-Plugin-SwaggerUI-v0.0.4.tar.gz
     provides:
@@ -1281,6 +1360,16 @@ DISTRIBUTIONS
     requirements:
       File::ShareDir 1.00
       Mojolicious 8.25
+  OLE-Storage_Lite-0.22
+    pathname: J/JM/JMCNAMARA/OLE-Storage_Lite-0.22.tar.gz
+    provides:
+      OLE::Storage_Lite 0.22
+      OLE::Storage_Lite::PPS 0.22
+      OLE::Storage_Lite::PPS::Dir 0.22
+      OLE::Storage_Lite::PPS::File 0.22
+      OLE::Storage_Lite::PPS::Root 0.22
+    requirements:
+      ExtUtils::MakeMaker 0
   Package-Stash-0.40
     pathname: E/ET/ETHER/Package-Stash-0.40.tar.gz
     provides:
@@ -1364,6 +1453,30 @@ DISTRIBUTIONS
       overload 0
       strict 0
       warnings 0
+  Parse-RecDescent-1.967015
+    pathname: J/JT/JTBRAUN/Parse-RecDescent-1.967015.tar.gz
+    provides:
+      Parse::RecDescent 1.967015
+      Parse::RecDescent::Action 1.967015
+      Parse::RecDescent::ColCounter 1.967015
+      Parse::RecDescent::Directive 1.967015
+      Parse::RecDescent::Error 1.967015
+      Parse::RecDescent::Expectation 1.967015
+      Parse::RecDescent::InterpLit 1.967015
+      Parse::RecDescent::LineCounter 1.967015
+      Parse::RecDescent::Literal 1.967015
+      Parse::RecDescent::OffsetCounter 1.967015
+      Parse::RecDescent::Operator 1.967015
+      Parse::RecDescent::Production 1.967015
+      Parse::RecDescent::Repetition 1.967015
+      Parse::RecDescent::Result 1.967015
+      Parse::RecDescent::Rule 1.967015
+      Parse::RecDescent::Subrule 1.967015
+      Parse::RecDescent::Token 1.967015
+      Parse::RecDescent::UncondReject 1.967015
+    requirements:
+      Test::More 0
+      Text::Balanced 1.95
   Path-Tiny-0.144
     pathname: D/DA/DAGOLDEN/Path-Tiny-0.144.tar.gz
     provides:
@@ -1661,6 +1774,34 @@ DISTRIBUTIONS
       strict 0
       version 0.83
       warnings 0
+  Spreadsheet-WriteExcel-2.40
+    pathname: J/JM/JMCNAMARA/Spreadsheet-WriteExcel-2.40.tar.gz
+    provides:
+      Spreadsheet::WriteExcel 2.40
+      Spreadsheet::WriteExcel::BIFFwriter 2.40
+      Spreadsheet::WriteExcel::Big 2.40
+      Spreadsheet::WriteExcel::Chart 2.40
+      Spreadsheet::WriteExcel::Chart::Area 2.40
+      Spreadsheet::WriteExcel::Chart::Bar 2.40
+      Spreadsheet::WriteExcel::Chart::Column 2.40
+      Spreadsheet::WriteExcel::Chart::External 2.40
+      Spreadsheet::WriteExcel::Chart::Line 2.40
+      Spreadsheet::WriteExcel::Chart::Pie 2.40
+      Spreadsheet::WriteExcel::Chart::Scatter 2.40
+      Spreadsheet::WriteExcel::Chart::Stock 2.40
+      Spreadsheet::WriteExcel::Examples 2.40
+      Spreadsheet::WriteExcel::Format 2.40
+      Spreadsheet::WriteExcel::Formula 2.40
+      Spreadsheet::WriteExcel::OLEwriter 2.40
+      Spreadsheet::WriteExcel::Properties 2.40
+      Spreadsheet::WriteExcel::Utility 2.40
+      Spreadsheet::WriteExcel::Workbook 2.40
+      Spreadsheet::WriteExcel::Worksheet 2.40
+    requirements:
+      ExtUtils::MakeMaker 0
+      File::Temp 0
+      OLE::Storage_Lite 0.19
+      Parse::RecDescent 0
   Sub-Exporter-0.988
     pathname: R/RJ/RJBS/Sub-Exporter-0.988.tar.gz
     provides:
@@ -1773,6 +1914,18 @@ DISTRIBUTIONS
       perl 5.006
       strict 0
       warnings 0
+  Text-CSV-2.02
+    pathname: I/IS/ISHIGAKI/Text-CSV-2.02.tar.gz
+    provides:
+      Text::CSV 2.02
+      Text::CSV::ErrorDiag 2.02
+      Text::CSV_PP 2.02
+    requirements:
+      ExtUtils::MakeMaker 0
+      IO::Handle 0
+      Test::Harness 0
+      Test::More 0.71
+      perl 5.006001
   Text-Pluralize-1.1
     pathname: K/KV/KVAIL/Text-Pluralize-1.1.tar.gz
     provides:

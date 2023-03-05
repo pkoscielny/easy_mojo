@@ -30,7 +30,6 @@ use Carp 'confess';
 $SIG{__DIE__} = \&confess;
 
 use YAML::XS;
-use Template::Simple;
 use Text::Pluralize;
 use Dotenv -load => 'config/.env';
 
@@ -39,10 +38,13 @@ use Mojo::Util qw( decamelize );
 
 use Data::Dumper;
 
+my @supported_response_formats = qw/txt csv html json xls xlsx/;
+
 
 # After startup all controller classes will be load.
 sub startup {
     my ($self) = @_;
+    print 'Running mode: ', $self->mode, "\n";
 
     $self->setup_plugins();
 
@@ -69,7 +71,7 @@ sub setup_plugins {
     # $self->plugin('DefaultHelpers');  # loaded by default so it is not needed.
 
     #TODO: thinkg about ReplyTable plugin for generating csv, etc formats in response_to.
-    # $self->plugin('Mojolicious::Plugin::ReplyTable');
+    $self->plugin('Mojolicious::Plugin::ReplyTable');
 
     $self->plugin('Request');
     $self->plugin('Logger');
@@ -137,7 +139,7 @@ sub setup_routing {
         };
         $self->log->trace("base route: $base_route");
 
-        my $r = $routes->under($base_route => [format => ['json', 'yaml', 'csv']]);
+        my $r = $routes->under($base_route => [format => \@supported_response_formats]);
         my $c_name = $rh->{controller_name};
 
         ### Common actions.
