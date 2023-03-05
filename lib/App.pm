@@ -43,7 +43,7 @@ use Data::Dumper;
 # After startup all controller classes will be load.
 sub startup {
     my ($self) = @_;
-    
+
     $self->setup_plugins();
 
     # Set unique passphrase for cookies.
@@ -65,17 +65,14 @@ sub setup_plugins {
         module => 'YAML::XS', 
         file => $self->home->rel_file('config/app.yml')->to_string
     );
-# warn "mojo conf: ", Dumper $self->config;
 
     # $self->plugin('DefaultHelpers');  # loaded by default so it is not needed.
+
+    #TODO: thinkg about ReplyTable plugin for generating csv, etc formats in response_to.
     # $self->plugin('Mojolicious::Plugin::ReplyTable');
 
     $self->plugin('Request');
-
-    $self->plugin('Logger' => {
-        log_file_path => $ENV{MOJO_LOG_FILE},
-        default_level => $ENV{MOJO_LOG_LEVEL},
-    });
+    $self->plugin('Logger');
 
     #TODO: think about it. It will be good to have this functionality. Maybe simple returns routing.yaml content without comments?
     # $self->plugin(
@@ -138,7 +135,7 @@ sub setup_routing {
 
             join '/', $route_prefix, map { decamelize $_ } @package_name;
         };
-warn "base_route: ", Dumper $base_route;  
+        $self->log->trace("base route: $base_route");
 
         my $r = $routes->under($base_route => [format => ['json', 'yaml', 'csv']]);
         my $c_name = $rh->{controller_name};

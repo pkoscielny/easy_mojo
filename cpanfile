@@ -6,6 +6,8 @@ requires 'Rose::DB::Object', '0.820';
 requires 'Test::NoWarnings', '1.06';
 requires 'Dotenv', '0.002';
 requires 'MojoX::Log::Log4perl';
+requires 'Log::Dispatch::Screen';
+#requires 'Log::Log4perl::Appender::DBI';
 #requires 'Mojolicious::Plugin::ReplyTable', '0.12';
 #requires 'Mojolicious::Plugin::SwaggerUI', 'v0.0.4';
 

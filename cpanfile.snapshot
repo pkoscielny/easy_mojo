@@ -733,6 +733,14 @@ DISTRIBUTIONS
       File::Spec 0
       File::Temp 0.16
       perl 5.00405
+  Devel-GlobalDestruction-0.14
+    pathname: H/HA/HAARG/Devel-GlobalDestruction-0.14.tar.gz
+    provides:
+      Devel::GlobalDestruction 0.14
+    requirements:
+      ExtUtils::MakeMaker 0
+      Sub::Exporter::Progressive 0.001011
+      perl 5.006
   Devel-StackTrace-2.04
     pathname: D/DR/DROLSKY/Devel-StackTrace-2.04.tar.gz
     provides:
@@ -933,6 +941,53 @@ DISTRIBUTIONS
       IPC::Cmd 0
       XSLoader 0.22
       base 0
+  Log-Dispatch-2.70
+    pathname: D/DR/DROLSKY/Log-Dispatch-2.70.tar.gz
+    provides:
+      Log::Dispatch 2.70
+      Log::Dispatch::ApacheLog 2.70
+      Log::Dispatch::Base 2.70
+      Log::Dispatch::Code 2.70
+      Log::Dispatch::Email 2.70
+      Log::Dispatch::Email::MIMELite 2.70
+      Log::Dispatch::Email::MailSend 2.70
+      Log::Dispatch::Email::MailSender 2.70
+      Log::Dispatch::Email::MailSendmail 2.70
+      Log::Dispatch::File 2.70
+      Log::Dispatch::File::Locked 2.70
+      Log::Dispatch::Handle 2.70
+      Log::Dispatch::Null 2.70
+      Log::Dispatch::Output 2.70
+      Log::Dispatch::Screen 2.70
+      Log::Dispatch::Syslog 2.70
+      Log::Dispatch::Types 2.70
+      Log::Dispatch::Vars 2.70
+    requirements:
+      Carp 0
+      Devel::GlobalDestruction 0
+      Dist::CheckConflicts 0.02
+      Encode 0
+      Exporter 0
+      ExtUtils::MakeMaker 0
+      Fcntl 0
+      IO::Handle 0
+      Module::Runtime 0
+      Params::ValidationCompiler 0
+      Scalar::Util 0
+      Specio 0.32
+      Specio::Declare 0
+      Specio::Exporter 0
+      Specio::Library::Builtins 0
+      Specio::Library::Numeric 0
+      Specio::Library::String 0
+      Sys::Syslog 0.28
+      Try::Tiny 0
+      base 0
+      namespace::autoclean 0
+      parent 0
+      perl 5.006
+      strict 0
+      warnings 0
   Log-Log4perl-1.57
     pathname: E/ET/ETJ/Log-Log4perl-1.57.tar.gz
     provides:
