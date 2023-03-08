@@ -9,4 +9,14 @@ use Model::DB::Alpha::Foo;
 has model => 'Model::DB::Alpha::Foo';
 
 
+# Reimplement 'get' or any orher action if needed.
+# sub get {
+#     my ($self) = @_;
+#     $self->log->info('get');
+#     # Do everything what you want.
+#     ...
+#     $self->response(data => $resource);
+# }
+
+
 1;

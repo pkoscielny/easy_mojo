@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>	
+
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.19.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+        http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.19.xsd">
+
+<!--
+    <preConditions>  
+        <runningAs  username="liquibase"/>  
+    </preConditions>  
+-->
+
+<!--
+    If you want to split this file into smaller parts you can use e.g:
+    <include file="db_migrations/alpha/changelog_1.xml" />
+
+    https://docs.liquibase.com/commands/change-tracking/tag.html
+    https://docs.liquibase.com/change-types/tag-database.html
+-->    
+
+    <changeSet  id="1"  author="pkoscielny">
+        <comment>Load initial schema</comment>
+        <sqlFile path="sql/1-initial_schema.sql" />
+        <rollback>
+            <sqlFile path="sql/1-initial_schema-rollback.sql" />
+        </rollback>
+    </changeSet>  
+
+    <changeSet  id="1-tag"  author="pkoscielny">
+        <tagDatabase  tag="version_0.1"/> 
+    </changeSet>
+
+    <changeSet  id="2"  author="pkoscielny"  context="data">
+        <comment>Add new rows to table bars</comment>
+        <sql>
+            INSERT INTO bars(id, name) VALUES (1, 'bar_1'), (2, 'bar_2');
+        </sql>
+        <rollback>
+            DELETE FROM bars WHERE id IN (1,2);
+        </rollback>
+    </changeSet>
+
+    <changeSet  id="2-tag"  author="pkoscielny">
+        <tagDatabase  tag="version_0.2"/> 
+    </changeSet>
+
+    <changeSet  id="3"  author="pkoscielny">
+        <comment>Add new table new_bars</comment>
+        <sql>
+            CREATE TABLE new_bars (id INTEGER NOT NULL, name STRING(2000000000, 10), CONSTRAINT PK_bars PRIMARY KEY (id));
+        </sql>
+        <rollback>
+            DROP TABLE new_bars;
+        </rollback>
+    </changeSet>  
+
+    <changeSet  id="4"  author="pkoscielny" context="data">
+        <comment>Add new rows to table new_bars</comment>
+        <sql>
+            INSERT INTO new_bars(id, name) VALUES (1, 'new_bar_1'), (2, 'new_bar_2');
+        </sql>
+        <rollback>
+            DELETE FROM new_bars WHERE id IN (1,2);
+        </rollback>
+    </changeSet>  
+
+
+<!-- New changeset template:
+    <changeSet  id=""  author="" context="data">
+        <comment></comment>
+        <sql>
+        </sql>
+        <rollback>
+        </rollback>
+    </changeSet>  
+-->
+    
+</databaseChangeLog>

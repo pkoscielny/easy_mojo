@@ -1,0 +1,4 @@
+# In this folder you can (re)generate database documentation.
+# After every run you need to change privileges: sudo chown -R $USER:$USER db_migrations/alpha/doc/
+*
+!.gitignore

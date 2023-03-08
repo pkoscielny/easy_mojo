@@ -7,11 +7,11 @@
 ---
 alpha:  # virtual db name (DSN)
   driver: sqlite
-  database: alpha.db
+  database: db/alpha.db
   domain: dev
 bravo:
   driver: sqlite
-  database: bravo.db
+  database: db/bravo.db
   domain: dev
   password:
 # one_pg:

@@ -1,0 +1,57 @@
+# docker-compose -f docker/docker-compose.yml build
+# docker-compose -f docker/docker-compose.yml up
+# docker-compose -f docker/docker-compose.yml up -d
+# docker-compose -f docker/docker-compose.yml stop <service_id>
+
+version: '3.5'
+services:
+  mojo:
+    build: 
+      context: .
+      dockerfile: "${PWD}/docker/Dockerfile.mojo"
+    image: "easy_mojo:latest"
+    container_name: "easy_mojo"
+    environment:
+      - "RUN_DB_MIGRATIONS=${RUN_DB_MIGRATIONS:-0}"
+    volumes:
+      - "${PWD}:/easy_mojo"
+    # Mapping ports: host:container
+    # ports:
+    #   - "${EASY_MOJO_PORT:-3000}:3000"
+    networks:
+      - backend
+
+  postgresql:
+    image: postgres:15.2-alpine
+    container_name: "postgres"
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: example
+    # volumes:
+    #   - ${PWD}/db/postgres:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - backend
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+    networks:
+      - backend
+
+  liquibase:
+    build: 
+      context: .
+      dockerfile: "${PWD}/docker/Dockerfile.liquibase"
+    image: "liquibase_with_mysql:4.19"
+    container_name: "liquibase"
+    environment:
+      INSTALL_MYSQL: "true"  # if you want to use MySQL.
+    networks:
+      - backend
+
+networks:
+  backend:
