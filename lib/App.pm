@@ -8,7 +8,8 @@ docker-compose -f docker/docker-compose.yml up
 carton install
 carton exec script/app.pl routes -v
 carton exec morbo -l  "http://*:3001" script/app.pl -w . -m dev
-http://127.0.0.1:3001/api/v1/bar/1.json
+http://127.0.0.1:3001/api/v1/alt_foo/1.json
+http://127.0.0.1:3001/api/v1/bars/1.json
 
 https://docs.mojolicious.org/Mojolicious/Plugin/DefaultHelpers
 

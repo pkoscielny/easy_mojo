@@ -1,7 +1,7 @@
-# docker-compose -f docker/docker-compose.yml build
-# docker-compose -f docker/docker-compose.yml up
-# docker-compose -f docker/docker-compose.yml up -d
-# docker-compose -f docker/docker-compose.yml stop <service_id>
+# bin/docker.sh --build
+# bin/docker.sh --start
+# bin/docker.sh --start --interactive
+# bin/docker.sh --stop
 
 version: '3.5'
 services:
@@ -46,6 +46,11 @@ services:
     build: 
       context: .
       dockerfile: "${PWD}/docker/Dockerfile.liquibase"
+      args:
+        uid: ${USER_ID}
+        gid: ${GROUP_ID}
+        user_name: ${USER_NAME}
+        group_name: ${GROUP_NAME}
     image: "liquibase_with_mysql:4.19"
     container_name: "liquibase"
     environment:

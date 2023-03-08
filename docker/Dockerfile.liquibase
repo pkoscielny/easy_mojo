@@ -1,3 +1,17 @@
 FROM liquibase/liquibase:4.19
 
 RUN lpm add mysql --global
+
+# Add same user as host user to prevent from permission problems.
+# https://www.fullstaq.com/knowledge-hub/blogs/docker-and-the-host-filesystem-owner-matching-problem
+ARG uid
+ARG gid
+ARG user_name
+ARG group_name
+
+USER root
+
+RUN addgroup --gid $gid $group_name && \
+    adduser --uid $uid --gid $gid --gecos "" --disabled-password $user_name
+
+USER $user_name
