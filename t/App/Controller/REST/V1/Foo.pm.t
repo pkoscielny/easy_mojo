@@ -1,28 +1,25 @@
 #!/usr/bin/perl
 
+# MOJO_MODE=test carton exec prove t/App/Controller/REST/V1/Foo.pm.t
+# MOJO_MODE=test carton exec perl t/App/Controller/REST/V1/Foo.pm.t
+
 use strict;
 use warnings;
 
-use Mojo::Base -strict;
+use Cwd;
+use lib Cwd::realpath() .'/lib';
 
-use Test::Mojo::App;
-use Test::More;
-# use Test::NoWarnings;
-
-=head1
-
-* create temporary db per t file
-* 
-
-=cut
-
+use Test::More tests => 23;
+use Test::NoWarnings;
 # use Test::Differences;
 # use Test::MockModule;
 # use Test::MockObject;
 # use Test::Mojo::More;
 
-# use FindBin;
-# BEGIN { unshift @INC, "$FindBin::Bin/../lib"  }
+use Test::Mojo::App;
+
+Test::Mojo::App->prepare_test_env();
+
 
 # Start a Mojolicious app.
 my $t = Test::Mojo::App->new('App');
@@ -69,6 +66,7 @@ $t->get_ok('/api/v1/alt_foo.json')
     ;
 
 $t->get_ok('/api/v1/alt_foo/1.json')
+# $t->get_ok('/api/v1/alt_foo/1')
     ->status_is(200)
     ->json_is('/data' => {
         id => 1,
@@ -89,7 +87,6 @@ $t->patch_ok('/api/v1/alt_one/1.json')
     ;
 
 
-done_testing();
 
 # $t->post_ok('/api/v1/alt_foo.json' => json => {
 #         event => 'full moon'
