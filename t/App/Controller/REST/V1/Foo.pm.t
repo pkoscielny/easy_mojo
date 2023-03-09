@@ -17,11 +17,15 @@ use Test::NoWarnings;
 # use Test::Mojo::More;
 
 use Test::Mojo::App;
-use Model::DB::Util 'prepare_db_test_env';
+use Model::DB::Util;
 
-prepare_db_test_env();
+# Prepare connections to test databases.
+prepare_test_db_env();
 
-# Should be always via 'require' and always after call prepare_db_test_env().
+# Quick copy of freshly prepared test databases.
+prepare_test_db_from_cache();
+
+# Should be always via 'require' and always after call prepare_test_db_env().
 # See Model::DB implementation for explanation.
 require Model::DB::Alpha::Foo;
 

@@ -25,7 +25,7 @@ pod2usage(1) and exit if $args{help};
 # Bunch of setting for tests.
 my $contexts = '';
 if ($args{test}) {
-    prepare_db_test_env();
+    prepare_test_db_env();
 
     $contexts = " --contexts='!data'";
 } 

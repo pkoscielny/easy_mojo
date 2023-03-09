@@ -22,7 +22,7 @@ GetOptions(
 pod2usage(1) and exit if $args{help};
 
 
-prepare_db_test_env() if $args{test};
+prepare_test_db_env() if $args{test};
 
 my $db_config = get_db_config();
 my @sqlite_configs = grep { $_->{driver} eq 'sqlite' } values %$db_config;

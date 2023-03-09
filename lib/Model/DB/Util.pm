@@ -6,12 +6,15 @@ use warnings;
 use Cwd;
 use YAML::XS;
 use Carp 'confess';
+use File::Copy;
 use Data::Dumper;
 
 use base qw( Exporter );
 our @EXPORT_OK = qw/
     get_db_config
-    prepare_db_test_env
+    prepare_test_db_env
+    prepare_test_db_from_cache
+    cache_test_db
 /;
 our @EXPORT = @EXPORT_OK;
 
@@ -78,7 +81,7 @@ sub _validate_fields {
 
 
 # Prepare env variables for tests.
-sub prepare_db_test_env {
+sub prepare_test_db_env {
 
     sub _prepare_env {
         my ($dsn, $param, $value) = @_;
@@ -110,5 +113,27 @@ sub prepare_db_test_env {
     }
 
 }
+
+
+sub prepare_test_db_from_cache {
+
+    # For SQLite.
+    my $cache_path = "$test_db_path/cache";
+    if (-e $cache_path) {
+        copy($_, $test_db_path) or confess "Copy failed: $!" for glob "$cache_path/*.db";
+    }
+
+}
+
+
+sub cache_test_db {
+
+    # For SQLite.
+    my $cache_path = "$test_db_path/cache";
+    mkdir $cache_path or die "Make dir $cache_path failed: $!" unless -e $cache_path;
+    copy($_, $cache_path) or confess "Copy failed: $!" for glob "$test_db_path/*.db";
+
+}
+
 
 1;
