@@ -17,8 +17,13 @@ use Test::NoWarnings;
 # use Test::Mojo::More;
 
 use Test::Mojo::App;
+use Model::DB::Util 'prepare_db_test_env';
 
-Test::Mojo::App->prepare_test_env();
+prepare_db_test_env();
+
+# Should be always via 'require' and always after call prepare_db_test_env().
+# See Model::DB implementation for explanation.
+require Model::DB::Alpha::Foo;
 
 
 # Start a Mojolicious app.
@@ -31,21 +36,13 @@ $t->post_ok('/api/v1/alt_foo.json')
 
 $t->get_ok('/api/v1/alt_foo.json')
     ->status_is(200)
-    ->json_is('/data' => [
-        {
-            id => 1,
-            name => 'foo1',
-        }, 
-        {
-            id => 2,
-            name => 'foo2',
-        },
-        {
-            id => 3,
-            name => 'foo4',
-        },
-    ])
+    ->data_is([])
     ;
+
+my $foo1 = { id => 1, name => 'foo1' };
+my $foo2 = { id => 2, name => 'foo2' };
+my $foo3 = { id => 3, name => 'foo3' };
+Model::DB::Alpha::Foo->add_object(%$_) for ($foo1, $foo2, $foo3);
 
 $t->get_ok('/api/v1/alt_foo.json')
     ->status_is(200)
@@ -60,7 +57,7 @@ $t->get_ok('/api/v1/alt_foo.json')
         },
         {
             id => 3,
-            name => 'foo4',
+            name => 'foo3',
         },
     ])
     ;

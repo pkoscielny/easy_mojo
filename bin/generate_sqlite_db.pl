@@ -10,7 +10,6 @@ use Getopt::Long;
 use Pod::Usage;
 
 use Model::DB::Util;
-use Test::Mojo::App;
 
 # Getting script arguments.
 my %args;
@@ -23,7 +22,7 @@ GetOptions(
 pod2usage(1) and exit if $args{help};
 
 
-Test::Mojo::App->prepare_test_env() if $args{test};
+prepare_db_test_env() if $args{test};
 
 my $db_config = get_db_config();
 my @sqlite_configs = grep { $_->{driver} eq 'sqlite' } values %$db_config;

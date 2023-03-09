@@ -5,13 +5,18 @@ use warnings;
 
 use Cwd;
 use YAML::XS;
+use Carp 'confess';
 use Data::Dumper;
 
 use base qw( Exporter );
 our @EXPORT_OK = qw/
     get_db_config
+    prepare_db_test_env
 /;
 our @EXPORT = @EXPORT_OK;
+
+#TODO: move test_db_path to yaml config. 
+my $test_db_path = 'db_test';
 
 
 sub get_db_config {
@@ -71,5 +76,39 @@ sub _validate_fields {
     return 1;
 }
 
+
+# Prepare env variables for tests.
+sub prepare_db_test_env {
+
+    sub _prepare_env {
+        my ($dsn, $param, $value) = @_;
+
+        $ENV{"MOJO_DB__${dsn}__${param}"} = $value;
+    }
+
+    my %env_generators = (
+        sqlite => sub {
+            my ($dsn, $rh_config) = @_;
+            my $db_name = (split '/', $rh_config->{database})[-1];
+            my $test_database = "$test_db_path/$db_name";
+            _prepare_env($dsn, 'database', $test_database);
+            _prepare_env($dsn, 'domain', 'test');
+        }, 
+        mysql    => sub { confess "Implementation for mysql test env generator required" },
+        postgres => sub { confess "Implementation for postgres test env generator required" },
+        redis    => sub { confess "Implementation for redis test env generator required" },
+        # ...
+    );
+
+    my $db_config = get_db_config();
+    while (my ($dsn, $rh_config) = each %$db_config) {
+
+        my $driver = $rh_config->{driver};
+
+        # Run test env generator for specific driver.
+        $env_generators{$driver}->($dsn, $rh_config) if exists $env_generators{$driver};
+    }
+
+}
 
 1;

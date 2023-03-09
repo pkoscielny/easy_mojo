@@ -11,7 +11,6 @@ use Pod::Usage;
 use Data::Dumper;
 
 use Model::DB::Util;
-use Test::Mojo::App;
 
 # Getting script arguments.
 my %args;
@@ -26,7 +25,7 @@ pod2usage(1) and exit if $args{help};
 # Bunch of setting for tests.
 my $contexts = '';
 if ($args{test}) {
-    Test::Mojo::App->prepare_test_env();
+    prepare_db_test_env();
 
     $contexts = " --contexts='!data'";
 } 
