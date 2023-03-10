@@ -47,19 +47,16 @@ sub data_is {
 }
 
 
-sub new {
-    my ($class, $name) = @_;
-    $name //= 'App';
+# Reimplement 'test' method and add new feature: exit when test failed.
+# It is useful if you have a lot of tests, many failed  and you want to fix them one by one.
+sub test {
+    my ($self, $name, @args) = @_;
+    local $Test::Builder::Level = $Test::Builder::Level + 3;
+    my $result = $self->success(!!$self->handler->($name, @args));
 
-    my $t = $class->SUPER::new($name);
+    exit if $ENV{MOJO_TEST_EXIT} and not $self->success;
 
-    # By default speak in JSON.
-    $t->ua->on(start => sub {
-        my ($ua, $tx) = @_;
-        $tx->req->headers->header( 'Accept' => 'application/json' );
-    });
-
-    return $t;
+    return $result;
 }
 
 
