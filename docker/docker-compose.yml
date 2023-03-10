@@ -3,12 +3,19 @@
 # bin/docker.sh --start --interactive
 # bin/docker.sh --stop
 
+# docker run --rm -it --entrypoint /bin/bash -v $PWD:/easy_mojo easy_mojo:latest
+
 version: '3.5'
 services:
   mojo:
     build: 
       context: .
       dockerfile: "${PWD}/docker/Dockerfile.mojo"
+      args:
+        uid: ${USER_ID}
+        gid: ${GROUP_ID}
+        user_name: ${USER_NAME}
+        group_name: ${GROUP_NAME}
     image: "easy_mojo:latest"
     container_name: "easy_mojo"
     environment:
@@ -16,8 +23,8 @@ services:
     volumes:
       - "${PWD}:/easy_mojo"
     # Mapping ports: host:container
-    # ports:
-    #   - "${EASY_MOJO_PORT:-3000}:3000"
+    ports:
+      - "${EASY_MOJO_PORT:-3000}:3000"
     networks:
       - backend
 

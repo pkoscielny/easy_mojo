@@ -1,7 +1,7 @@
 #!/bin/bash 
 
 function start {
-    docker-compose -f $DOCKER_COMPOSE_FILE up $DETACH_MODE 
+    docker-compose -f $DOCKER_COMPOSE_FILE up $DETACH_MODE $SERVICE_ID
 }
 
 function stop {
@@ -23,10 +23,6 @@ SERVICE_ID=""
 if [ -f "$PWD/config/.env" ]; then
     export $(grep -v '^#' "$PWD/config/.env" | xargs)
 fi
-# [ -z "$UID" ] && export UID=$(id -u)
-# [ -z "$GID" ] && export GID=$(id -g)
-# [ -z "$USER_NAME" ] && export USER_NAME=$(id -u -n)
-# [ -z "$GROUP_NAME" ] && export GROUP_NAME=$(id -g -n)
 export USER_ID=$(id -u)
 export GROUP_ID=$(id -g)
 export USER_NAME=$(id -u -n)

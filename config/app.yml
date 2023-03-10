@@ -1,7 +1,7 @@
 ---
 hypnotoad:
   listen:
-    - 'http://*:8080'
+    - 'http://*:3000'
 
 app_secret_passphrase:
   - 'My very secret old passphrase.' 

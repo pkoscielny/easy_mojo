@@ -1,5 +1,6 @@
 requires 'Mojolicious', '9.25';
 requires 'JSON::XS', '4.03';
+requires 'YAML::XS';
 # requires 'Template::Simple', '0.06';
 requires 'Text::Pluralize';  # this lib is poor. Try to find something better.
 requires 'Dotenv', '0.002';
