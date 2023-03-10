@@ -15,9 +15,10 @@ use Model::DB::Util;
 # Getting script arguments.
 my %args;
 GetOptions(
-    't|test'    => \$args{test},
-    'v|verbose' => \$args{verbose},
-    'help|?'    => \$args{help},
+    't|test'              => \$args{test},
+    'r|rollback_to_tag=s' => \$args{rollback_to_tag},
+    'v|verbose'           => \$args{verbose},
+    'help|?'              => \$args{help},
 );
 pod2usage(1) and exit if $args{help};
 
@@ -30,6 +31,8 @@ if ($args{test}) {
     $contexts = " --contexts='!data'";
 } 
 
+my $hide_stderr = $args{verbose} ? '' : '2>/dev/null';
+my $action = $args{rollback_to_tag} ? "rollback --tag=$args{rollback_to_tag}" : 'update';
 my $db_config = get_db_config();
 print "db config: ", Dumper $db_config if $args{verbose};
 
@@ -40,7 +43,7 @@ while (my ($dsn, $rh_config) = each %$db_config) {
             --url='jdbc:sqlite:/easy_mojo/$rh_config->{database}' \\
             --classpath=/easy_mojo/db_migrations/$dsn \\
             --changelog-file=changelog.xml \\
-            update $contexts
+            $action $contexts $hide_stderr
     };
     print $cmd if $args{verbose};
 
@@ -67,7 +70,9 @@ __END__
 
  $ perl bin/run_migrations.pl
  $ perl bin/run_migrations.pl --help
+ $ perl bin/run_migrations.pl --rollback_to_tag version_0.1
  $ perl bin/run_migrations.pl --test --verbose
+ $ perl bin/run_migrations.pl --test --rollback_to_tag version_0.1
 
 =head1 OPTIONS
 
@@ -76,6 +81,10 @@ __END__
 =item --test|t
 
  Run migrations for test databases.
+
+=item --rollback_to_tag|r
+
+ Run rollback to a specific tag.
 
 =item --verbose|v
 

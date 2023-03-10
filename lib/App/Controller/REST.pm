@@ -126,7 +126,8 @@ sub get_resource_list {
 
 #TODO: lot of boulerplate below. Refactoring needed. Similar to Ruby on Rails?
 
-#TODO: full list implementation.
+#TODO: full list implementation:
+# meta: items, limit, offset
 sub list {
     my ($self) = @_;
     $self->log->info('list');

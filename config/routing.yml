@@ -7,36 +7,38 @@
   # Lack of automatic pluralization.
   alt_route: /api/v1/alt_foo 
   actions:
-    - get
     - list
+    - get
 - package_name: V1::Bar
   actions:
+    - list
     - get
     - add
     - update
     - delete
-    - list
+    - patch  #TODO
+    # /api/v1/bars/custom_action1/:id/:name
     - action: custom_action1
       method: POST
       placeholders:  # the order is important.
         - id
         - name
+    # /api/v1/bars/custom_action2
     - action: custom_action2
       method: POST
 - package_name: V2::Product
   actions:
+    - list
     - get
     - add
     - update
-    - list
-    - patch  #TODO
 - package_name: V2::Category
   actions:
     - list
 - package_name: V2::Post
   actions:
+    - list
     - get
     - add
     - update
     - delete
-    - list

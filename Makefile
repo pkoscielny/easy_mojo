@@ -3,16 +3,19 @@ test:
 	make prepare_test_database
 	make run_test
 
+# After first run 'make test' you can run 'make run_test' multiple times to save your time.
 run_test:
-	carton exec 'prove -r t/'
+	@echo "######## Running tests ########"
+	prove -r t/
 
 prepare_test_database:
 	@echo "######## Preparing test databases ########"
-	carton exec 'perl bin/generate_sqlite_db.pl --test --force'
-	carton exec 'perl bin/run_migrations.pl --test'
-	carton exec 'perl -Ilib -e "use strict; use Model::DB::Util; cache_test_db()"'
+	perl bin/generate_sqlite_db.pl --test --force
+	prove -r db_migrations/test_migrations.t
+	perl bin/run_migrations.pl --test
+	perl -Ilib -e "use strict; use Model::DB::Util; cache_test_db()"
 
 prepare_database:
 	@echo "######## Preparing databases ########"
-	carton exec 'perl bin/generate_sqlite_db.pl --force'
-	carton exec 'perl bin/run_migrations.pl'
+	perl bin/generate_sqlite_db.pl --force
+	perl bin/run_migrations.pl

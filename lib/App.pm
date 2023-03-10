@@ -41,7 +41,7 @@ use Mojo::Util qw( decamelize );
 
 use Data::Dumper;
 
-my @supported_response_formats = qw/txt csv html json xls xlsx/;
+my @supported_response_formats = qw/txt csv html json yaml xls xlsx/;
 
 
 # After startup all controller classes will be load.
@@ -193,7 +193,7 @@ sub setup_routing {
 
             my $action = $item->{action};
             my $method = lc $item->{method};
-            my $local_route = '/';
+            my $local_route = "/$action/";
             if (my $phs = $item->{placeholders}) {
                 $local_route .= join "/", map {":$_"} @$phs;
             }
