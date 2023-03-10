@@ -7,11 +7,8 @@ use Mojo::Base 'Test::Mojo';
 use List::Util 'any';
 use Carp 'confess';
 
-
 #TODO: move keys_to_skip to yaml config. 
 my @keys_to_skip = qw(mtime audit);
-
-#TODO: implement stopping alter failed first test.
 
 
 # Works like json_is but it can skip some kind of fields like datetime.

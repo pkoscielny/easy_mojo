@@ -14,10 +14,13 @@ http://127.0.0.1:3001/api/v1/bars/1.json
 https://docs.mojolicious.org/Mojolicious/Plugin/DefaultHelpers
 
 TODO:
-* add meta implementation: elapsed_time for getting data from model.
+* add generators for different drivers in bin/run_migrations.pl
 * add unit tests for existing resources
+* add meta implementation: elapsed_time for getting data from model; items for list, etc.
 * dockerizing everything (https://docs.mojolicious.org/Mojolicious/Guides/Cookbook#Containers)
 * switch to the Hypnotoad
+* implement model for other databases like Redis, Mongodb, ...
+* implement model for postgres with migrations, test db caching, etc...
 * run scanner: https://github.com/aquasecurity/trivy
 * implement RESTful actions as a non-blocking operations (external API calls, interactions with model objects in general)
 ---

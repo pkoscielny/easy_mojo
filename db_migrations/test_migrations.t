@@ -1,6 +1,7 @@
 #!/usr/bin/perl
 
-# carton exec perl t/0_test_migrations.t
+# carton exec 'perl db_migrations/test_migrations.t'
+# MOJO_DB_DEBUG=1 carton exec 'perl db_migrations/test_migrations.t'
 
 use strict;
 use warnings;

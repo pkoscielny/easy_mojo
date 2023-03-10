@@ -36,6 +36,7 @@ my $action = $args{rollback_to_tag} ? "rollback --tag=$args{rollback_to_tag}" : 
 my $db_config = get_db_config();
 print "db config: ", Dumper $db_config if $args{verbose};
 
+#TODO: add generators for different drivers.
 while (my ($dsn, $rh_config) = each %$db_config) {
     my $cmd = qq{
         docker run --rm \\
