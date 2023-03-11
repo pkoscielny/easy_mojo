@@ -47,9 +47,8 @@ sub data_is {
 # Reimplement 'test' method and add new feature: exit when test failed.
 # It is useful if you have a lot of tests, many failed  and you want to fix them one by one.
 sub test {
-    my ($self, $name, @args) = @_;
-    local $Test::Builder::Level = $Test::Builder::Level + 3;
-    my $result = $self->success(!!$self->handler->($name, @args));
+    my ($self, @args) = @_;
+    my $result = $self->SUPER::test(@args);
 
     exit if $ENV{MOJO_TEST_EXIT} and not $self->success;
 
