@@ -39,8 +39,7 @@ print "db config: ", Dumper $db_config if $args{verbose};
 #TODO: add generators for different drivers.
 while (my ($dsn, $rh_config) = each %$db_config) {
     my $cmd = qq{
-        docker run --rm \\
-            -v $Bin/..:/easy_mojo liquibase_with_mysql:4.19 \\
+        liquibase \\
             --url='jdbc:sqlite:/easy_mojo/$rh_config->{database}' \\
             --classpath=/easy_mojo/db_migrations/$dsn \\
             --changelog-file=changelog.xml \\

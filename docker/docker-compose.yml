@@ -3,7 +3,10 @@
 # bin/docker.sh --start --interactive
 # bin/docker.sh --stop
 
-# docker run --rm -it --entrypoint /bin/bash -v $PWD:/easy_mojo easy_mojo:latest
+# docker run --rm -it -v $PWD:/easy_mojo  easy_mojo:latest bash
+# docker run --rm -it -v $PWD:/easy_mojo  easy_mojo:latest carton exec make test
+# Run as root:
+# docker run --rm -it -v $PWD:/easy_mojo -u 0  easy_mojo:latest bash
 
 version: '3.5'
 services:
@@ -49,21 +52,21 @@ services:
     networks:
       - backend
 
-  liquibase:
-    build: 
-      context: .
-      dockerfile: "${PWD}/docker/Dockerfile.liquibase"
-      args:
-        uid: ${USER_ID}
-        gid: ${GROUP_ID}
-        user_name: ${USER_NAME}
-        group_name: ${GROUP_NAME}
-    image: "liquibase_with_mysql:4.19"
-    container_name: "liquibase"
-    environment:
-      INSTALL_MYSQL: "true"  # if you want to use MySQL.
-    networks:
-      - backend
+  # liquibase:
+  #   build: 
+  #     context: .
+  #     dockerfile: "${PWD}/docker/Dockerfile.liquibase"
+  #     args:
+  #       uid: ${USER_ID}
+  #       gid: ${GROUP_ID}
+  #       user_name: ${USER_NAME}
+  #       group_name: ${GROUP_NAME}
+  #   image: "liquibase_with_mysql:4.19"
+  #   container_name: "liquibase"
+  #   environment:
+  #     INSTALL_MYSQL: "true"  # if you want to use MySQL.
+  #   networks:
+  #     - backend
 
 networks:
   backend:
