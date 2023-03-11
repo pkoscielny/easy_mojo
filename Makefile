@@ -1,10 +1,10 @@
 
 test:
 	make prepare_test_database
-	make run_test
+	make test_run
 
-# After first run 'make test' you can run 'make run_test' multiple times to save your time.
-run_test:
+# After first run 'make test' you can run 'make test_run' multiple times to save your time.
+test_run:
 	@echo "######## Running tests ########"
 	prove -r t/
 

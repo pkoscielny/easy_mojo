@@ -1,0 +1,19 @@
+#!/bin/bash 
+
+: '
+    emojo [every Linux command]
+
+    Arguments:
+        Every Linux command.
+        By default it is bash.
+'
+
+# Run bash as default.
+if [ $# -eq 0 ]; then
+    set -- "$@" bash
+fi
+
+docker run --rm -it --entrypoint '' -v $PWD:/easy_mojo  easy_mojo:latest $@
+
+# Run as root:
+# docker run --rm -it --entrypoint '' -v $PWD:/easy_mojo -u 0  easy_mojo:latest bash

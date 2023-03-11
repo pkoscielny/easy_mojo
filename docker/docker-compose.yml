@@ -1,13 +1,3 @@
-# bin/docker.sh --build
-# bin/docker.sh --start
-# bin/docker.sh --start --interactive
-# bin/docker.sh --stop
-
-# docker run --rm -it -v $PWD:/easy_mojo  easy_mojo:latest bash
-# docker run --rm -it -v $PWD:/easy_mojo  easy_mojo:latest carton exec make test
-# Run as root:
-# docker run --rm -it -v $PWD:/easy_mojo -u 0  easy_mojo:latest bash
-
 version: '3.5'
 services:
   mojo:

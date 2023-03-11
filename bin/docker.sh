@@ -12,6 +12,18 @@ function build {
     docker-compose -f $DOCKER_COMPOSE_FILE build
 }
 
+function help {
+    echo "
+    docker.sh
+
+    Arguments:
+        --start   [-s | --service] [-i | --interactive]   - start (all services | given service) in interactive or detached mode.
+        --stop    [-s | --service]                        - stop (all services | given service).
+        --restart [-s | --service]                        - run stop and start.
+        -b | --build                                      - build all images.
+        -h | --help                                       - print this help.
+    "
+}
 
 # Define local variables.
 DOCKER_COMPOSE_FILE="$PWD/docker/docker-compose.yml"
@@ -65,9 +77,13 @@ for i in "${!ACTIONS[@]}"; do
     --restart)
       stop; start; exit;
       ;;
-    --build)
+    -b|--build)
       build; exit
+      ;;
+    -h|--help)
+      help; exit
       ;;
   esac
 done  
 
+help
