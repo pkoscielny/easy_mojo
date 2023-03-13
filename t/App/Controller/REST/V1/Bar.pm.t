@@ -33,7 +33,7 @@ prepare_test_db_from_cache();
 
 # Should be always via 'require' and always after call prepare_test_db_env().
 # See Model::DB implementation for explanation.
-require Model::DB::Bravo::Bar;
+require Model::DB::ORM::Bravo::Bar;
 
 
 ###################
@@ -60,7 +60,7 @@ my $bars = [
     { id => 2, name => 'bar2' },
     { id => 3, name => 'bar3' },
 ];
-Model::DB::Bravo::Bar->add_object(%$_) for @$bars;
+Model::DB::ORM::Bravo::Bar->add_object(%$_) for @$bars;
 
 $t->get_ok('/api/v1/bars.json')
     ->status_is(200)

@@ -1,7 +1,7 @@
-package Model::DB::Object;
+package Model::DB::ORM::Object;
 
-# carton exec perl -Ilib -e 'use strict; use warnings; use Model::DB::Object;'
-# carton exec perl -Ilib -e 'use strict; use warnings; use Model::DB::Alpha::Foo; my $foo = Model::DB::Alpha::Foo->new; my $obj = Model::DB::Alpha::Foo->get_object(1); use Data::Dumper; print Dumper $obj->as_tree;'
+# carton exec perl -Ilib -e 'use strict; use warnings; use Model::DB::ORM::Object;'
+# carton exec perl -Ilib -e 'use strict; use warnings; use Model::DB::ORM::Alpha::Foo; my $foo = Model::DB::ORM::Alpha::Foo->new; my $obj = Model::DB::ORM::Alpha::Foo->get_object(1); use Data::Dumper; print Dumper $obj->as_tree;'
 
 use strict;
 use warnings;
@@ -9,7 +9,7 @@ use warnings;
 use Carp 'confess';
 use Data::Dumper;
 
-use Model::DB;
+use Model::DB::ORM;
 use Rose::DB::Object::Helpers qw( as_tree );
 use base qw(Rose::DB::Object Model);
 
@@ -23,8 +23,8 @@ sub init_db {
     my $dsn = $class->get_dsn();
 
     unless ($db_cache{$dsn} and $db_cache{$dsn}->dbh->ping) {
-        #TODO: Model::DB->new or new_or_cached.
-        my $db = Model::DB->new(type => $dsn);
+        #TODO: Model::DB::ORM->new or new_or_cached.
+        my $db = Model::DB::ORM->new(type => $dsn);
 
         #TODO: release_dbh? Think about it: https://metacpan.org/pod/Rose::DB#Database-Handle-Life-Cycle-Management
         die $db->error if not $db->retain_dbh;

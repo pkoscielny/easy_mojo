@@ -5,8 +5,8 @@ use warnings;
 
 use Mojo::Base 'App::Controller::REST';
 
-use Model::DB::Alpha::Foo;
-has model => 'Model::DB::Alpha::Foo';
+use Model::DB::ORM::Alpha::Foo;
+has model => 'Model::DB::ORM::Alpha::Foo';
 
 
 # Reimplement 'get' or any orher action if needed.

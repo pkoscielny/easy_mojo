@@ -1,4 +1,4 @@
-package Model::DB;
+package Model::DB::ORM;
 
 # Based on Rose DB best practices:
 # https://metacpan.org/pod/Rose::DB::Tutorial

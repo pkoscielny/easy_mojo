@@ -1,12 +1,12 @@
-package Model::DB::Bravo::Bar;
+package Model::DB::ORM::Bravo::Bar;
 
-# carton exec perl -Ilib -e 'use strict; use warnings; use Model::DB::Bravo::Bar;'
+# carton exec perl -Ilib -e 'use strict; use warnings; use Model::DB::ORM::Bravo::Bar;'
 
 use strict;
 use warnings;
 
 use Rose::DB::Object::Manager;
-use base qw(Model::DB::Bravo);
+use base qw(Model::DB::ORM::Bravo);
 
 
 __PACKAGE__->meta->setup(
@@ -33,7 +33,7 @@ sub writable_fields {qw/
 
 #TODO: read and decide which way will be better: 
 # https://metacpan.org/dist/Rose-DB-Object/view/lib/Rose/DB/Object/Tutorial.pod#Multiple-objects
-# Think about creating separate layer to implement all CRUD model methods: Model::DB::Object class will represent only single row.
+# Think about creating separate layer to implement all CRUD model methods: Model::DB::ORM::Object class will represent only single row.
 # But what with initialization? It requires 'use Model::..'.
 Rose::DB::Object::Manager->make_manager_methods('rows');
 

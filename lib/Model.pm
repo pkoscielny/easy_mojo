@@ -14,9 +14,9 @@ The *_object is because some of method names like 'update' are reserved by Rose:
 ---------------------------
 
 Model::DB (Rose::DB) - register [Model::DB]
-Model::DB::Object (Rose::DB::Object, Model) - init_db, get_dsn, get_dbh, load_by_id, ... 
-Model::DB::Alpha (Model::DB::Object) - sub get_dsn {'alpha'} 
-Model::DB::Alpha::Foo (Model::DB::Alpha) - table 
+Model::DB::ORM::Object (Rose::DB::Object, Model) - init_db, get_dsn, get_dbh, load_by_id, ... 
+Model::DB::ORM::Alpha (Model::DB::ORM::Object) - sub get_dsn {'alpha'} 
+Model::DB::ORM::Alpha::Foo (Model::DB::ORM::Alpha) - table 
 
 Model::WSGateway (Model) - implemented
 Model::WSGateway::ExampleCom:

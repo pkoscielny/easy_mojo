@@ -5,8 +5,8 @@ use warnings;
 
 use Mojo::Base 'App::Controller::REST';
 
-use Model::DB::Bravo::Bar;
-has model => 'Model::DB::Bravo::Bar';
+use Model::DB::ORM::Bravo::Bar;
+has model => 'Model::DB::ORM::Bravo::Bar';
 
 
 sub custom_action1 {
