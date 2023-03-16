@@ -4,7 +4,7 @@ package Model::DB::ORM;
 # https://metacpan.org/pod/Rose::DB::Tutorial
 # https://metacpan.org/dist/Rose-DB-Object/view/lib/Rose/DB/Object/Tutorial.pod
 
-# carton exec perl -Ilib -e 'use strict; use warnings; use Model::DB;'
+# carton exec perl -Ilib -e 'use strict; use warnings; use Model::DB::ORM;'
 
 use strict;
 use warnings;
@@ -17,7 +17,7 @@ use Model::DB::Util;
 __PACKAGE__->use_private_registry;
 
 
-my $db_config = get_db_config();
+my $db_config = get_db_config('orm');
 
 my ($default_domain, $default_type);
 while (my ($dsn, $rh_config) = each %$db_config) {

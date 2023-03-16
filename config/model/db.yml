@@ -1,8 +1,8 @@
-# DB configs.
+# DB config:
 # Here is a place for the common parts of these configs. 
 # You can set the rest of these configs like usernames, passwords, hosts as env vars 
 #   (config/.env or docker compose files or just setup env vars).
-# DSN -> driver, creds, host, username, passwd, etc.
+# DSN: driver, creds, host, username, passwd, etc.
 # Do not use multiple '_' characters consecutively in DSN name.
 ---
 alpha:  # virtual db name (DSN)
@@ -14,6 +14,11 @@ bravo:
   database: db/bravo.db
   domain: dev
   password:
+redis_backend:
+  driver: redis
+  host: localhost
+  port: 6379
+  connection_name: backend
 # one_pg:
 #   driver: 'pg'
 #   database: 'one'

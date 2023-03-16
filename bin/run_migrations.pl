@@ -33,7 +33,7 @@ if ($args{test}) {
 
 my $hide_stderr = $args{verbose} ? '' : '2>/dev/null';
 my $action = $args{rollback_to_tag} ? "rollback --tag=$args{rollback_to_tag}" : 'update';
-my $db_config = get_db_config();
+my $db_config = get_db_config('orm');
 print "db config: ", Dumper $db_config if $args{verbose};
 
 #TODO: add generators for different drivers.
@@ -64,7 +64,7 @@ __END__
 
 =head1 SYNOPSIS
 
- Script for running migrations on databases taken from db.yml configuration.
+ Script for running migrations on databases taken from config/model/orm.yml configuration.
   
 =head1 EXAMPLES
 

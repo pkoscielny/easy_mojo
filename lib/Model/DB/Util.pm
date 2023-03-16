@@ -8,6 +8,7 @@ use YAML::XS;
 use Carp 'confess';
 use File::Copy;
 use Data::Dumper;
+use List::Util qw( none );
 
 use base qw( Exporter );
 our @EXPORT_OK = qw/
@@ -18,18 +19,33 @@ our @EXPORT_OK = qw/
 /;
 our @EXPORT = @EXPORT_OK;
 
-#TODO: move test_db_path to yaml config. 
 my $test_db_path = 'db_test';
+my $config_file = 'config/model/db.yml';
+my %supported_db_types = (
+    orm   => [qw/ pg mysql mariadb informix oracle sqlite /],  # https://metacpan.org/pod/Rose::DB
+    redis => [qw/ redis /],
+    # ...
+);
 
 
 sub get_db_config {
-    # my (%params) = @_;
+    my ($db_type) = @_;
 
-    my $db_config_path = Cwd::realpath() . '/config/model/db.yml';
+    my $drivers = [];
+    if ($db_type) {
+        $drivers = $supported_db_types{ $db_type } or confess "Not supported model db config: $db_type";
+    } 
+    else {
+        push @$drivers, map { @$_ } values %supported_db_types;
+    }
+
+    my $db_config_path = Cwd::realpath() ."/$config_file";
     my $db_config_yaml = YAML::XS::LoadFile($db_config_path);
     my $db_config_env = _get_db_config_env();
 
+    my $db_config = {};
     while (my ($dsn, $rh_config) = each %$db_config_yaml) {
+        next if none { $rh_config->{driver} eq $_ } @$drivers;
 
         # Fields validation.
         _validate_fields($rh_config);
@@ -41,9 +57,10 @@ sub get_db_config {
         }
 
         print "DB DSN: $dsn: ". Dumper $rh_config if $ENV{MOJO_DB_DEBUG};
+        $db_config->{ $dsn } = $rh_config;
     }
 
-    return $db_config_yaml;
+    return $db_config;
 }
 
 
@@ -70,10 +87,8 @@ sub _validate_fields {
 
     foreach my $field (qw(
         driver  
-        database  
-        domain
     )) {
-        die "'$field' field is required" if not exists $rh->{$field};
+        confess "'$field' field is required" if not exists $rh->{$field};
     }
 
     return 1;
@@ -99,7 +114,6 @@ sub prepare_test_db_env {
         }, 
         mysql    => sub { confess "Implementation for mysql test env generator required" },
         postgres => sub { confess "Implementation for postgres test env generator required" },
-        redis    => sub { confess "Implementation for redis test env generator required" },
         # ...
     );
 
@@ -130,7 +144,7 @@ sub cache_test_db {
 
     # For SQLite.
     my $cache_path = "$test_db_path/cache";
-    mkdir $cache_path or die "Make dir $cache_path failed: $!" unless -e $cache_path;
+    mkdir $cache_path or confess "Make dir $cache_path failed: $!" unless -e $cache_path;
     copy($_, $cache_path) or confess "Copy failed: $!" for glob "$test_db_path/*.db";
 
 }

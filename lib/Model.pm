@@ -5,7 +5,7 @@ use warnings;
 
 =head1
 
-Model::DB - db layer based on Rose::DB. The naming convention is Model::DB::<DSN>::<table>.
+Model::DB::ORM - db layer based on Rose::DB. The naming convention is Model::DB::ORM::<DSN>::<table>.
 Model::WSGateway - call to other web services.
 App::Controller::REST has default resource object (throw exception) but in specific resource will be one of Model::*
 
@@ -13,7 +13,7 @@ The *_object is because some of method names like 'update' are reserved by Rose:
 
 ---------------------------
 
-Model::DB (Rose::DB) - register [Model::DB]
+Model::DB::ORM (Rose::DB) - registering DB connections.
 Model::DB::ORM::Object (Rose::DB::Object, Model) - init_db, get_dsn, get_dbh, load_by_id, ... 
 Model::DB::ORM::Alpha (Model::DB::ORM::Object) - sub get_dsn {'alpha'} 
 Model::DB::ORM::Alpha::Foo (Model::DB::ORM::Alpha) - table 

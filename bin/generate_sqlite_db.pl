@@ -24,7 +24,7 @@ pod2usage(1) and exit if $args{help};
 
 prepare_test_db_env() if $args{test};
 
-my $db_config = get_db_config();
+my $db_config = get_db_config('orm');
 my @sqlite_configs = grep { $_->{driver} eq 'sqlite' } values %$db_config;
 
 foreach my $rh_config (@sqlite_configs) {
@@ -50,7 +50,7 @@ __END__
 
 =head1 SYNOPSIS
 
- Script for generating local SQLite databases based on db.yml configuration.
+ Script for generating local SQLite databases based on config/model/orm.yml configuration.
   
 =head1 EXAMPLES
 
