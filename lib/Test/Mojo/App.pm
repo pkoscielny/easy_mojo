@@ -6,6 +6,7 @@ use warnings;
 use Mojo::Base 'Test::Mojo';
 use List::Util 'any';
 use Carp 'confess';
+use Data::Dumper;
 
 #TODO: move keys_to_skip to yaml config. 
 my @keys_to_skip = qw(mtime audit);
@@ -50,7 +51,9 @@ sub test {
     my ($self, @args) = @_;
     my $result = $self->SUPER::test(@args);
 
-    exit if $ENV{MOJO_TEST_EXIT} and not $self->success;
+    if ($ENV{MOJO_TEST_EXIT} and not $self->success) {
+        confess 'response: '. Dumper($self->tx->res->json);
+    }
 
     return $result;
 }

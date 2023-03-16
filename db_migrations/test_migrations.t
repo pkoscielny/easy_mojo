@@ -34,13 +34,13 @@ _check_output($output, "Testing migrations run");
 
 # What if someone wrote a bad rollback? 
 # Better is to know about it earlier during unit tests run, not just on production.
-$output = `perl bin/run_migrations.pl --test --rollback_to_tag version_0.1 --verbose 2>&1`;
+$output = `perl bin/run_migrations.pl --test --rollback_to_tag init --verbose 2>&1`;
 _check_output($output, "Testing migrations rollback to initial state");
 
 $output = `perl bin/run_migrations.pl --test --verbose 2>&1`;
 _check_output($output, "Testing migrations run - again");
 
-$output = `perl bin/run_migrations.pl --test --rollback_to_tag version_0.1 --verbose 2>&1`;
+$output = `perl bin/run_migrations.pl --test --rollback_to_tag init --verbose 2>&1`;
 _check_output($output, "Testing migrations rollback to initial state - again");
 
 sub _check_output {

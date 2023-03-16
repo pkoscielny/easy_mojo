@@ -24,6 +24,10 @@
     https://docs.liquibase.com/change-types/tag-database.html
 -->    
 
+    <changeSet  id="0-tag"  author="pkoscielny">
+        <tagDatabase  tag="init"/> 
+    </changeSet>
+
     <changeSet  id="1"  author="pkoscielny">
         <comment>Load initial schema</comment>
         <sqlFile path="sql/1-initial_schema.sql" />
