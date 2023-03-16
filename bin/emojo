@@ -1,12 +1,7 @@
 #!/bin/bash 
 
-: '
-    emojo [every Linux command]
+# Usage: emojo [every Linux command; bash by default]
 
-    Arguments:
-        Every Linux command.
-        By default it is bash.
-'
 
 # Run bash as default.
 if [ $# -eq 0 ]; then

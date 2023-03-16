@@ -30,9 +30,16 @@ bin/emojo make prepare_database
 ```
 
 ## Run Easy Mojo as a service
+
+Interactive mode for development:
 ```
-bin/docker.sh --start --i
+bin/docker.sh --start -i
 ```
+You can control running migrations `(set MOJO_DB_MIGRATIONS to 0 or 1)`
+or operating mode `(set MOJO_ENV to dev, test, prod)`.
+All of these env variables are set in the docker-compose.yml
+Setting the `dev` mode will start Morbo. Other modes will start the Hypnotoad server.
+
 
 ## Run specific commands
 
@@ -45,7 +52,6 @@ After this first run you can run tests multiple times:
 ```
 bin/emojo make test_run 
 ```
-
 
 Run BASH console:
 ```

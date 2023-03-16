@@ -3,7 +3,7 @@ package App;
 
 =head1
 
-docker-compose -f docker/docker-compose.yml up
+docker exec -it easy_mojo /bin/bash
 
 carton install
 carton exec script/app.pl routes -v
@@ -14,13 +14,13 @@ http://127.0.0.1:3001/api/v1/bars/1.json
 https://docs.mojolicious.org/Mojolicious/Plugin/DefaultHelpers
 
 TODO:
+* set log config depending on MOJO_MODE
 * add generators for different drivers in bin/run_migrations.pl
 * add more unit tests for existing resources
 * add a test code coverage to a Makefile
 * fix problem with not working GET method in custom actions
 * add meta implementation: elapsed_time for getting data from model; items for list, etc.
 * dockerizing everything (https://docs.mojolicious.org/Mojolicious/Guides/Cookbook#Containers)
-* switch to the Hypnotoad
 * implement model for other databases like Redis, Mongodb, ...
 * implement model for postgres with migrations, test db caching, etc...
 * add onlice API doc (e.g. Swagger)

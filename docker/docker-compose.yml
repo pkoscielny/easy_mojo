@@ -9,10 +9,11 @@ services:
         gid: ${GROUP_ID}
         user_name: ${USER_NAME}
         group_name: ${GROUP_NAME}
-    image: "easy_mojo:latest"
-    container_name: "easy_mojo"
+    image: easy_mojo:latest
+    container_name: easy_mojo
     environment:
-      - "RUN_DB_MIGRATIONS=${RUN_DB_MIGRATIONS:-0}"
+      MOJO_MODE: ${MOJO_ENV:-dev}
+      MOJO_DB_MIGRATIONS: ${MOJO_DB_MIGRATIONS:-1}
     volumes:
       - "${PWD}:/easy_mojo"
     # Mapping ports: host:container
@@ -21,42 +22,40 @@ services:
     networks:
       - backend
 
-  postgresql:
-    image: postgres:15.2-alpine
-    container_name: "postgres"
-    restart: always
-    environment:
-      POSTGRES_PASSWORD: example
-    # volumes:
-    #   - ${PWD}/db/postgres:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
-    networks:
-      - backend
-
-  adminer:
-    image: adminer
-    restart: always
-    ports:
-      - 8080:8080
-    networks:
-      - backend
-
-  # liquibase:
-  #   build: 
-  #     context: .
-  #     dockerfile: "${PWD}/docker/Dockerfile.liquibase"
-  #     args:
-  #       uid: ${USER_ID}
-  #       gid: ${GROUP_ID}
-  #       user_name: ${USER_NAME}
-  #       group_name: ${GROUP_NAME}
-  #   image: "liquibase_with_mysql:4.19"
-  #   container_name: "liquibase"
+  # postgresql:
+  #   image: postgres:15.2-alpine
+  #   container_name: postgres
+  #   restart: always
   #   environment:
-  #     INSTALL_MYSQL: "true"  # if you want to use MySQL.
+  #     POSTGRES_PASSWORD: example
+  #   # volumes:
+  #   #   - ${PWD}/db/postgres:/var/lib/postgresql/data
+  #   # Mapping ports: host:container
+  #   ports:
+  #     - "5432:5432"
   #   networks:
   #     - backend
+
+  # adminer:
+  #   image: adminer
+  #   restart: always
+  #   # Mapping ports: host:container
+  #   ports:
+  #     - 8080:8080
+  #   networks:
+  #     - backend
+
+  redis:
+    image: redis:7.0.9
+    container_name: redis
+    restart: always
+    # volumes:
+    #   - ${PWD}/db/redis:/data
+    # Mapping ports: host:container
+    ports:
+      - 6379:6379
+    networks:
+      - backend
 
 networks:
   backend:

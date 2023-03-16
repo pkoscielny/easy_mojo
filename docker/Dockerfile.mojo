@@ -30,7 +30,8 @@ WORKDIR /easy_mojo
 ENV PATH="/liquibase:/easy_mojo/local/bin:${PATH}"
 ENV PERL5LIB="/easy_mojo/local/lib/perl5:${PERL5LIB}"
 
+EXPOSE 3000
+
 ENTRYPOINT ["/easy_mojo/docker/mojo_entrypoint.sh"]
 
-EXPOSE 3000
 CMD ["carton", "exec", "hypnotoad", "-f", "script/app.pl"]
