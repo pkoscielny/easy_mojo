@@ -97,7 +97,7 @@ sub _validate_fields_to_save {
     my ($self, $params) = @_;
 
 #TODO: where use writable_fields? In REST or in model?
-    my %writable_fields = map { $_ => 1 } $self->model->writable_fields;
+    my %writable_fields = map { $_ => 1 } $self->model->writable_fields() or return;
 
     $self->response_400('WRONG_JSON_PARAMS') if any { not exists $writable_fields{$_} } keys %$params;
 }

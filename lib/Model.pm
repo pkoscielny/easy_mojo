@@ -68,7 +68,7 @@ sub filter_out_unreadable_fields {
     my ($class, $resource) = @_;
     return $resource unless $resource;
 
-    my @readable_fields = $class->readable_fields or return $resource;
+    my @readable_fields = $class->readable_fields() or return $resource;
     my %readable_fields = map { $_ => 1 } @readable_fields;
 
     my $resources = ref $resource eq 'ARRAY' ? $resource : [$resource];
@@ -86,7 +86,7 @@ sub filter_out_unwritable_fields {
     my ($class, $params) = @_;
 
     # Filter out forbidden fields only if writable fields are given.
-    my @writable_fields = $class->writable_fields or return $params;
+    my @writable_fields = $class->writable_fields() or return $params;
     my %writable_fields = map { $_ => 1 } @writable_fields;
 
     foreach my $field (keys %$params) {

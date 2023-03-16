@@ -1,14 +1,13 @@
 # This kind of config should be fully stored in the version control system without being overwritten by any env var.
 # If you want to turn off some route you can just comment it out.
 ---
-# App::Controller::REST::V1::Foo
+# App::Controller::REST::V1::Foo based on SQLite.
 - package_name: V1::Foo
   # alt_route is optional. If you want to use a different route than the one implied by the package name.
   # Lack of automatic pluralization.
   alt_route: /api/v1/alt_foo 
-  actions:
-    - list
-    - get
+  actions: [list, get]
+# Based on SQLite.
 - package_name: V1::Bar
   actions:
     - list
@@ -26,19 +25,15 @@
     # /api/v1/bars/custom_action2
     - action: custom_action2
       method: POST
+# Based on Redis.
+- package_name: V1::Baz
+  actions: [list, get, add, update, delete]
+# Based on gateway to https://dummyjson.com.
 - package_name: V2::Product
-  actions:
-    - list
-    - get
-    - add
-    - update
+  actions: [list, get, add, update]
+# Based on gateway to https://dummyjson.com.
 - package_name: V2::Category
-  actions:
-    - list
+  actions: [list]
+# Based on gateway to https://jsonplaceholder.typicode.com.
 - package_name: V2::Post
-  actions:
-    - list
-    - get
-    - add
-    - update
-    - delete
+  actions: [list, get, add, update, delete]

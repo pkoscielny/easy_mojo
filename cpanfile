@@ -26,3 +26,4 @@ requires 'DBD::SQLite', '1.72';
 #requires 'DBD::mysql';
 #requires 'DBD::Pg';
 
+requires 'Redis', '2.000';

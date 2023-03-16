@@ -8,6 +8,9 @@ test_run:
 	@echo "######## Running tests ########"
 	prove -r t/
 
+test_cc:
+	rm -rf cover_db; PERL5OPT=-MDevel::Cover=-blib prove -r t/ ; cover
+
 prepare_test_database:
 	@echo "######## Preparing test databases ########"
 	perl bin/generate_sqlite_db.pl --test --force

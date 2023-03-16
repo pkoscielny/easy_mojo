@@ -27,7 +27,7 @@ sub init_db {
         my $db = Model::DB::ORM->new(type => $dsn);
 
         #TODO: release_dbh? Think about it: https://metacpan.org/pod/Rose::DB#Database-Handle-Life-Cycle-Management
-        die $db->error if not $db->retain_dbh;
+        confess $db->error if not $db->retain_dbh;
         
         $db_cache{$dsn} = $db;
     }

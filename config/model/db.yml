@@ -14,11 +14,12 @@ bravo:
   database: db/bravo.db
   domain: dev
   password:
-redis_backend:
+charlie:
   driver: redis
-  host: localhost
-  port: 6379
-  connection_name: backend
+  server: 'redis:6379'
+  name: backend
+  conservative_reconnect: 1
+  debug: 0
 # one_pg:
 #   driver: 'pg'
 #   database: 'one'
