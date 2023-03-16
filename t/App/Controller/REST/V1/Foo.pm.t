@@ -32,7 +32,7 @@ prepare_test_db_env();
 prepare_test_db_from_cache();
 
 # Should be always via 'require' and always after call prepare_test_db_env().
-# See Model::DB implementation for explanation.
+# See Model::DB::ORM implementation for explanation.
 require Model::DB::ORM::Alpha::Foo;
 
 

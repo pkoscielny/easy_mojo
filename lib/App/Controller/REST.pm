@@ -17,7 +17,10 @@ has model => undef;
 # Try to get parameter with it's value first from GET params and second from POST params.
 #TODO: support for array parameters like param[]=1,2,3.
 sub get_param {
-    my ($self, $name) = @_;
+    my ($self, 
+        $name,   # param name
+        %params  # required => 0|1 - if true and no given param in request then returns response 400 with error token.
+    ) = @_;
 
     $self->{params} //= {};
 
@@ -43,7 +46,10 @@ sub get_param {
         $self->{params}{all} = \(%{$self->{params}{json}}, %{$self->{params}{req}});
     }
 
-    return $self->{params}{all};
+    return $self->{params}{all} unless $name;
+    
+    $self->response_400('PARAM_'. uc($name) .'_REQUIRED') if $params{required};
+    return undef;
 
     # Split param path by separator.
 #     my @params = split ',', $path; # path -> name
