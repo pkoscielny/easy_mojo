@@ -12,7 +12,7 @@ use lib Cwd::realpath() .'/lib';
 ## Configuration ##
 ###################
 
-use Test::More tests => 75;
+use Test::More tests => 95;
 use Test::NoWarnings;
 # use Test::Differences;
 # use Test::MockModule;
@@ -91,6 +91,11 @@ $t->get_ok('/api/v1/bars/4.json')
 ### Testing add action.
 ###
 
+$t->post_ok('/api/v1/bars.json')
+    ->status_is(400)
+    ->json_is('/message', 'EMPTY_JSON_PARAMS')
+    ;
+
 my $new_bar = { name => 'new_bar' };
 $t->post_ok('/api/v1/bars.json' => json => {
         %$new_bar,
@@ -127,6 +132,11 @@ $t->get_ok('/api/v1/bars.json')
 ### Testing update action.
 ###
 
+$t->put_ok('/api/v1/bars/1.json')
+    ->status_is(400)
+    ->json_is('/message', 'EMPTY_JSON_PARAMS')
+    ;
+
 $bars->[0]{name} = 'bar1_updated';
 $t->put_ok('/api/v1/bars/1.json' => json => {
         name => $bars->[0]{name}
@@ -147,8 +157,24 @@ $t->get_ok('/api/v1/bars.json')
 ###
 
 $t->patch_ok('/api/v1/bars/1.json')
-    ->status_is(404)
+    ->status_is(400)
+    ->json_is('/message', 'EMPTY_JSON_PARAMS')
     ;
+
+$bars->[0]{name} = 'bar1_updated_again';
+$t->patch_ok('/api/v1/bars/1.json' => json => {
+        name => $bars->[0]{name}
+    })
+    ->status_is(200)
+    ->data_is($bars->[0])
+    ;
+
+$t->get_ok('/api/v1/bars.json')
+    ->status_is(200)
+    # ->json_is('/meta/items', 4)
+    ->data_is($bars)
+    ;
+
 
 ###
 ### Testing delete action.

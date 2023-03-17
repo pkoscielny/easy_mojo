@@ -7,6 +7,15 @@ app_secret_passphrase:
   - 'My very secret old passphrase.' 
   - 'My very secret new passphrase.' 
 
+supported_response_formats:
+  - json
+  - yaml
+  - csv
+  - xls
+  - xlsx
+  - html
+  - txt
+
 # Automatic pluralize each route except for routes with alt_route field.
 route_pluralization: true
 

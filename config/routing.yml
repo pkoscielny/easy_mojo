@@ -15,8 +15,10 @@
     - add
     - update
     - delete
-    - patch  #TODO
+    - patch
     # /api/v1/bars/custom_action1/:id/:name
+    # Watch out for collision of GET requet with :id (get action) and GET request with custom action.
+    # In this case you must use the non-colliding method: POST.
     - action: custom_action1
       method: POST
       placeholders:  # the order is important.

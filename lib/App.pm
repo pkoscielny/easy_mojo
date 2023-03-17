@@ -1,34 +1,24 @@
 package App;
 
-
 =head1
 
-docker exec -it easy_mojo /bin/bash
-
-carton install
-carton exec script/app.pl routes -v
-carton exec morbo -l  "http://*:3001" script/app.pl -w . -m dev
-http://127.0.0.1:3001/api/v1/alt_foo/1.json
-http://127.0.0.1:3001/api/v1/bars/1.json
+bin/emojo script/app.pl routes -v
 
 https://docs.mojolicious.org/Mojolicious/Plugin/DefaultHelpers
 
 TODO:
-* set log config depending on MOJO_MODE
+* set log config depending on MOJO_MODE:
+ - test: no logs
+ - dev: logs on stderr
+ - 
 * add generators for different drivers in bin/run_migrations.pl
 * add more unit tests for existing resources
-* add a test code coverage to a Makefile
-* fix problem with not working GET method in custom actions
-* add meta implementation: elapsed_time for getting data from model; items for list, etc.
-* dockerizing everything (https://docs.mojolicious.org/Mojolicious/Guides/Cookbook#Containers)
-* implement model for other databases like Redis, Mongodb, ...
-* implement model for postgres with migrations, test db caching, etc...
+* add meta implementation: elapsed_time for getting data from model; items for list, etc
+* implement proper 'update' and 'patch' actions
+* implement model for postgres with migrations, test db caching, etc
 * add onlice API doc (e.g. Swagger)
 * run scanner: https://github.com/aquasecurity/trivy
 * implement RESTful actions as a non-blocking operations (external API calls, interactions with model objects in general)
----
-* authentication plugin
-* authorization plugin
 
 =cut
 
@@ -79,11 +69,10 @@ sub setup_plugins {
 
     # $self->plugin('DefaultHelpers');  # loaded by default so it is not needed.
 
-    #TODO: thinkg about ReplyTable plugin for generating csv, etc formats in response_to.
     $self->plugin('Mojolicious::Plugin::ReplyTable');
-
-    $self->plugin('Request');
     $self->plugin('Logger');
+    $self->plugin('Request');
+    $self->plugin('Authorize');
 
     #TODO: think about it. It will be good to have this functionality. Maybe simple returns routing.yaml content without comments?
     # $self->plugin(
@@ -112,12 +101,13 @@ sub setup_rest_config {
         }
 
         # Add actions as a hashref - more useful.
+        # In YAML file we have a list - it is more readable when you have a lot of packages.
         $rh->{rh_actions} = { map {$_ => 1} map { ref $_ eq 'HASH' ? $_->{action} : $_ } @{$rh->{actions}} };
 
         $rh->{controller_name} = "REST::$rh->{package_name}";
     }
 
-    # $self->app->log->debug('routing conf: '. Dumper $rest_conf);
+    $self->app->log->debug('routing conf: '. Dumper $rest_conf);
     $self->{rest_config} = $rest_conf;
 }
 
@@ -148,7 +138,7 @@ sub setup_routing {
         };
         $self->log->trace("base route: $base_route");
 
-        my $r = $routes->under($base_route => [format => \@supported_response_formats]);
+        my $r = $routes->under($base_route => [ format => $self->config->{supported_response_formats} ]);
         my $c_name = $rh->{controller_name};
 
         ### Common actions.
@@ -158,7 +148,7 @@ sub setup_routing {
             ->to(controller => $c_name, action => 'list') 
             if exists $rh->{rh_actions}{list};
 
-        #TODO: for bigger params payload (complex query) I have to use POST method.
+        #TODO: for bigger params payload (complex query) we have to use POST method.
         # POST.
         # $r->post('/list')
         #     ->to(controller => $c_name, action => 'list')
@@ -184,11 +174,10 @@ sub setup_routing {
             ->to(controller => $c_name, action => 'delete')
             if exists $rh->{rh_actions}{delete};
         
-        # TODO: patch implementation.
         # PATCH.
-        # $r->patch('/')
-        #     ->to(controller => $c_name, action => 'patch')
-        #     if exists $rh->{rh_actions}{patch};
+        $r->patch('/:id')
+            ->to(controller => $c_name, action => 'patch')
+            if exists $rh->{rh_actions}{patch};
 
         ### Custom actions.
 
@@ -217,20 +206,6 @@ sub setup_routing {
 
     } #routes
 }
-
-
-# sub setup_hooks {
-#     my ($self) = @_;
-
-#     $self->hook( before_dispatch => sub {
-#         my ($app) = @_;
-        
-#         $app->{params} //= {};
-
-#     });
-
-# }
-
 
 
 1;
