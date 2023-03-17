@@ -8,7 +8,13 @@ if [ $# -eq 0 ]; then
     set -- "$@" bash
 fi
 
-docker run --rm -it --entrypoint '' -v $PWD:/easy_mojo  easy_mojo:latest $@
+if [ "$(docker ps | grep easy_mojo)" ]; then
+    echo "Go to a working easy_mojo container"
+    docker exec -it easy_mojo $@
+else
+    echo "Run a new easy_mojo container"
+    docker run --rm -it --entrypoint '' -v $PWD:/easy_mojo  easy_mojo:latest $@
+fi
 
 # Run as root:
 # docker run --rm -it --entrypoint '' -v $PWD:/easy_mojo -u 0  easy_mojo:latest bash

@@ -9,7 +9,7 @@ test_run:
 	prove -r t/
 
 test_cc:
-	rm -rf cover_db; PERL5OPT=-MDevel::Cover=-blib prove -r t/ ; cover
+	cover -t +select ^lib +ignore ^ -make 'prove -r t/; exit $?' db_test/cover_db
 
 prepare_test_database:
 	@echo "######## Preparing test databases ########"

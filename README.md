@@ -37,26 +37,44 @@ bin/docker.sh --start -i
 ```
 You can control running migrations `(set MOJO_DB_MIGRATIONS to 0 or 1)`
 or operating mode `(set MOJO_ENV to dev, test, prod)`.
+
 All of these env variables are set in the docker-compose.yml
 Setting the `dev` mode will start Morbo. Other modes will start the Hypnotoad server.
 
 
 ## Run specific commands
 
-Prepare and run all unit tests:
+
+### Prepare and run all unit tests
+
+
 ```
-bin/emojo make test 
+bin/docker.sh --start -i
+```
+
+In other console:
+```
+bin/emojo
+make test
 ```
 
 After this first run you can run tests multiple times:
 ```
-bin/emojo make test_run 
+make test_run
 ```
 
-Run BASH console:
+Also you can run test code coverage:
+```
+make test_cc
+```
+All code coverage results are in a `db_test/cover_db` folder.
+
+
+### Run BASH console inside a easy_mojo container:
 ```
 bin/emojo
 ```
+
 
 ## Author
 Paweł Kościelny
