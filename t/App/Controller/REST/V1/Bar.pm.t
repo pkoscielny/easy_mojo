@@ -102,7 +102,7 @@ $t->post_ok('/api/v1/bars.json' => json => {
         id => 4,  # invalid field to write.
     })
     ->status_is(400)
-    ->json_is('/message', 'WRONG_JSON_PARAMS')
+    ->json_is('/message', 'WRONG_ID_FIELD')
     ;
 
 $t->post_ok('/api/v1/bars.json' => json => {

@@ -45,6 +45,12 @@ Setting the `dev` mode will start Morbo. Other modes will start the Hypnotoad se
 ## Run specific commands
 
 
+### Run BASH console inside a easy_mojo container:
+```
+bin/emojo
+```
+
+
 ### Prepare and run all unit tests
 
 
@@ -70,9 +76,10 @@ make test_cc
 All code coverage results are in a `db_test/cover_db` folder.
 
 
-### Run BASH console inside a easy_mojo container:
+In daily work, e.g:
 ```
 bin/emojo
+MOJO_TEST_EXIT=1 perl t/App/Controller/REST/V1/Bar.pm.t
 ```
 
 

@@ -91,8 +91,10 @@ sub add_object {
 
     my $id   = $params{_id} || _generate_id();
     my $key  = $class->_get_key($id);
-    $class->filter_out_unwritable_fields(\%params);
+
+    $class->handle_unwritable_fields(\%params);
     my $text = $json->encode(\%params);
+
     $conn->set($key, $text);
 
     $params{_id} = $class->_get_id($id);
@@ -115,6 +117,7 @@ sub delete_object {
 
     my $rh  = $class->get_object($id);
     my $key = $class->_get_key($id);
+    
     $conn->del($key);
 
     return $rh;

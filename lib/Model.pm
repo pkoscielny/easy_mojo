@@ -5,11 +5,12 @@ use warnings;
 
 =head1
 
-Model::DB::ORM - db layer based on Rose::DB. The naming convention is Model::DB::ORM::<DSN>::<table>.
+Model::DB::ORM   - db layer based on Rose::DB. The naming convention is Model::DB::ORM::<DSN>::<table>.
+Model::DB::Redis - db layer based on Redis.
 Model::WSGateway - call to other web services.
-App::Controller::REST has default resource object (throw exception) but in specific resource will be one of Model::*
+App::Controller::REST has empty resource object (throw exception) but in specific resource will be one of Model::*
 
-The *_object is because some of method names like 'update' are reserved by Rose::DB::Object.
+The *_object is because some of method names like 'update' are reserved by e.g. Rose::DB::Object.
 
 ---------------------------
 
@@ -17,6 +18,10 @@ Model::DB::ORM (Rose::DB) - registering DB connections.
 Model::DB::ORM::Object (Rose::DB::Object, Model) - init_db, get_dsn, get_dbh, load_by_id, ... 
 Model::DB::ORM::Alpha (Model::DB::ORM::Object) - sub get_dsn {'alpha'} 
 Model::DB::ORM::Alpha::Foo (Model::DB::ORM::Alpha) - table 
+
+Model::DB::Redis - registering DB connections.
+Model::DB::Redis::Object (Model) - get_dsn, generic implementation of Model methods
+Model::DB::Redis::<DSN>::<"let's say table"> - a container similar to a table with Perl structures saved as JSON
 
 Model::WSGateway (Model) - implemented
 Model::WSGateway::ExampleCom:
@@ -82,20 +87,29 @@ sub filter_out_unreadable_fields {
 }
 
 
-sub filter_out_unwritable_fields {
-    my ($class, $params) = @_;
+sub handle_unwritable_fields {
+    my ($class, 
+        $fields, # rh to check.
+        %params  # die - if set then die if any field is not on the writable_fields list.
+    ) = @_;
 
     # Filter out forbidden fields only if writable fields are given.
-    my @writable_fields = $class->writable_fields() or return $params;
+    my @writable_fields = $class->writable_fields() or return $fields;
     my %writable_fields = map { $_ => 1 } @writable_fields;
 
-    foreach my $field (keys %$params) {
-        delete $params->{$field} unless exists $writable_fields{$field};
+    foreach my $field (keys %$fields) {
+        next if exists $writable_fields{$field};
+
+        if ($params{die}) {
+            die 'WRONG_'. uc($field) ."_FIELD\n";
+        } else {
+            delete $fields->{$field};
+        }
     }
     #my @all_fields = keys %$params;
-    #map { delete $params{$_} unless exists $writable_fields{$_} } @all_fields;
+    #map { delete $fields->{$_} unless exists $writable_fields{$_} } @all_fields;
 
-    return $params;
+    return $fields;
 }
 
 

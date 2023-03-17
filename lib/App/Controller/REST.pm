@@ -5,7 +5,6 @@ use warnings;
 
 use Mojo::Base 'App::Controller';
 
-use List::Util qw(any);
 use Data::Dumper;
 
 has model => undef;
@@ -20,20 +19,20 @@ sub get_related {
 }
 
 
-sub _validate_fields_to_save {
+sub validate_fields_to_save {
     my ($self, $params) = @_;
 
-#TODO: where use writable_fields? In REST or in model?
-    my %writable_fields = map { $_ => 1 } $self->model->writable_fields() or return;
-
-    $self->response_400('WRONG_JSON_PARAMS') if any { not exists $writable_fields{$_} } keys %$params;
+    eval {
+        $self->model->handle_unwritable_fields($params, die => 1);
+    };
+    chomp($@) && $self->response_400($@) if $@;
 }
 
 
-sub _get_resource {
-    my ($self) = @_;
+sub get_resource {
+    my ($self, $id) = @_;
 
-    my $id = $self->param('id');
+    $id //= $self->param('id');
     my $related = $self->get_related;
     #TODO: implement fetching related objects.
 
@@ -57,8 +56,6 @@ sub get_resource_list {
 
 ### end
 
-#TODO: lot of boulerplate below. Refactoring needed. Similar to Ruby on Rails?
-
 #TODO: full list implementation:
 # meta: items, limit, offset
 sub list {
@@ -81,7 +78,7 @@ sub get {
     $self->log->info('get');
 
     # Gets an object by id or 404.
-    my $resource = $self->_get_resource() or $self->response_404;
+    my $resource = $self->get_resource() or $self->response_404;
     $self->log->debug('resource: '. Dumper $resource);
 
     $self->authorize_params($resource);
@@ -98,13 +95,12 @@ sub add {
     my $params = $self->req->json() or $self->response_400('EMPTY_JSON_PARAMS');
     $self->log->debug('params: '. Dumper $params);
 
-    $self->_validate_fields_to_save($params);
+    $self->validate_fields_to_save($params);
     $self->authorize_params($params);
 
     my $resource = $self->model->add_object(%$params);
     $resource = $self->model->filter_out_unreadable_fields($resource);
 
-    $self->log->debug('added object: '. Dumper $resource);
     $self->response(data => $resource);
 }
 
@@ -114,13 +110,13 @@ sub update {
     $self->log->info('update');
 
     my $id = $self->param('id');
-    my $resource = $self->_get_resource() or $self->response_404;
+    my $resource = $self->get_resource($id) or $self->response_404;
     $self->log->debug('resource: '. Dumper $resource);
 
     my $params = $self->req->json() or $self->response_400('EMPTY_JSON_PARAMS');
     $self->log->debug('params: '. Dumper $params);
 
-    $self->_validate_fields_to_save($params);
+    $self->validate_fields_to_save($params);
     $self->authorize_params($params);
 
     $resource = $self->model->update_object($id, %$params);
@@ -143,14 +139,13 @@ sub delete {
     $self->log->info('delete');
 
     my $id = $self->param('id');
-    my $resource = $self->_get_resource() or $self->response_404;
+    my $resource = $self->get_resource($id) or $self->response_404;
 
-    $self->authorize_params($resource);
+    $self->authorize_resource($resource);
 
     $resource = $self->model->delete_object($id);
     $resource = $self->model->filter_out_unreadable_fields($resource);
-
-    $self->log->debug('deleted object: '. Dumper $resource);
+    
     $self->response(data => $resource);
 }
 

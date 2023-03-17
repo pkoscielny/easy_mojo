@@ -1,13 +1,9 @@
 package Model::DB::ORM::Object;
 
-# carton exec perl -Ilib -e 'use strict; use warnings; use Model::DB::ORM::Object;'
-# carton exec perl -Ilib -e 'use strict; use warnings; use Model::DB::ORM::Alpha::Foo; my $foo = Model::DB::ORM::Alpha::Foo->new; my $obj = Model::DB::ORM::Alpha::Foo->get_object(1); use Data::Dumper; print Dumper $obj->as_tree;'
-
 use strict;
 use warnings;
 
 use Carp 'confess';
-use Data::Dumper;
 
 use Model::DB::ORM;
 use Rose::DB::Object::Helpers qw( as_tree );
@@ -50,10 +46,8 @@ sub writable_fields {()}
 #TODO: reimplement set_fields - implement set fields cascade: https://metacpan.org/pod/Rose::DB::Object#OBJECT-METHODS
 sub set_fields {
     my ($self, %params) = @_;
-# warn "set_fields: params: ", Dumper \%params;
 
-    $self->filter_out_unwritable_fields(\%params);
-# warn "set_fields: params filtered: ", Dumper \%params;
+    $self->handle_unwritable_fields(\%params);
 
     while (my($field, $value) = each %params) {
         $self->$field($value);
@@ -71,7 +65,7 @@ sub _get_object {
 
     #TODO: add more validation.
     my $pk = $class->meta->primary_key->columns->[0]->name;
-    # die unless $pk;
+    # confess unless $pk;
 
     my $object = $class->new($pk => $id);
     return $object->load(speculative => 1, %params) || undef;
@@ -108,7 +102,6 @@ sub get_object_list {
 
 sub add_object {
     my ($class, %params) = @_;
-# warn "add_object: params: ", Dumper \%params;
 
     my $object = $class->new;
     $object->set_fields(%params);
@@ -120,8 +113,6 @@ sub add_object {
 
 sub update_object {
     my ($class, $id, %params) = @_;
-# warn "update_object: id: ", Dumper $id;
-# warn "update_object: params: ", Dumper \%params;
 
     my $object = $class->_get_object($id, %params);
     $object->set_fields(%params);
@@ -133,7 +124,6 @@ sub update_object {
 
 sub delete_object {
     my ($class, $id) = @_;
-# warn "delete_object: id: ", Dumper $id;
 
     my $object = $class->_get_object($id);
     $object->delete();  # cascade => 1 ?
