@@ -5,6 +5,7 @@ requires 'YAML::XS', '0.86';
 requires 'Text::Pluralize', '1.1';  # this lib is poor. Try to find something better.
 requires 'Dotenv', '0.002';
 
+requires 'Test::MockModule', 'v0.177.0';
 requires 'Test::NoWarnings', '1.06';
 requires 'Devel::Cover', '1.38';
 

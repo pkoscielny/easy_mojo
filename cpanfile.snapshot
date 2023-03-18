@@ -1910,6 +1910,15 @@ DISTRIBUTIONS
     requirements:
       Sub::Exporter 0
       Test::More 0
+  SUPER-1.20190531
+    pathname: C/CH/CHROMATIC/SUPER-1.20190531.tar.gz
+    provides:
+      SUPER 1.20190531
+    requirements:
+      Scalar::Util 1.20
+      Sub::Identify 0.03
+      Test::Simple 0.61
+      perl v5.6.2
   Specio-0.48
     pathname: D/DR/DROLSKY/Specio-0.48.tar.gz
     provides:
@@ -2079,6 +2088,16 @@ DISTRIBUTIONS
       Try::Tiny 0.07
       strict 0
       warnings 0
+  Test-MockModule-v0.177.0
+    pathname: G/GF/GFRANKS/Test-MockModule-v0.177.0.tar.gz
+    provides:
+      Test::MockModule v0.177.0
+    requirements:
+      Carp 0
+      Module::Build 0.38
+      SUPER 1.20
+      Scalar::Util 0
+      perl 5.006
   Test-NoWarnings-1.06
     pathname: H/HA/HAARG/Test-NoWarnings-1.06.tar.gz
     provides:

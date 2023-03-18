@@ -73,6 +73,7 @@ sub setup_plugins {
     $self->plugin('Logger');
     $self->plugin('Request');
     $self->plugin('Authorize');
+    # $self->plugin('Authenticate');
 
     #TODO: think about it. It will be good to have this functionality. Maybe simple returns routing.yaml content without comments?
     # $self->plugin(

@@ -54,7 +54,9 @@ sub get_resource_list {
 }
 
 
-### end
+###
+### REST actions:
+###
 
 #TODO: full list implementation:
 # meta: items, limit, offset
