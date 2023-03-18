@@ -100,7 +100,7 @@ sub add {
     $self->validate_fields_to_save($params);
     $self->authorize_params($params);
 
-    my $resource = $self->model->add_object(%$params);
+    my $resource = $self->model->add_object(%$params) or $self->response_503;
     $resource = $self->model->filter_out_unreadable_fields($resource);
 
     $self->response(data => $resource);
@@ -121,7 +121,7 @@ sub update {
     $self->validate_fields_to_save($params);
     $self->authorize_params($params);
 
-    $resource = $self->model->update_object($id, %$params);
+    $resource = $self->model->update_object($id, %$params) or $self->response_503;
     $resource = $self->model->filter_out_unreadable_fields($resource);
 
     $self->response(data => $resource);
@@ -145,7 +145,7 @@ sub delete {
 
     $self->authorize_resource($resource);
 
-    $resource = $self->model->delete_object($id);
+    $resource = $self->model->delete_object($id) or $self->response_503;
     $resource = $self->model->filter_out_unreadable_fields($resource);
     
     $self->response(data => $resource);

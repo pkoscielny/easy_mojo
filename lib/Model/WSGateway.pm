@@ -8,6 +8,7 @@ use base qw(Model);
 use Carp 'confess';
 use Mojo::UserAgent;
 
+my $max_redirects = 5;
 
 # Basic Model::WSGateway uses blocking requests.
 # https://docs.mojolicious.org/Mojo/UserAgent
@@ -35,7 +36,7 @@ sub get_object {
     my $url = join '/', $class->_url_base(), $class->_url_get($id);
 
     my $res = $class->ua
-        ->max_redirects(5)
+        ->max_redirects($max_redirects)
         ->get($url)
         ->result
     ;
@@ -50,11 +51,12 @@ sub get_object_list {
     my $url = join '/', $class->_url_base(), $class->_url_list(%params);
 
     my $res = $class->ua
-        ->max_redirects(5)
+        ->max_redirects($max_redirects)
         ->get($url)
         ->result
     ;
-    
+
+    # Or return [] - as you need.    
     return undef unless $res->is_success;
     return $res->json;
 }
@@ -65,15 +67,12 @@ sub add_object {
     my $url = join '/', $class->_url_base(), $class->_url_add(%params);
 
     my $res = $class->ua
-        ->max_redirects(5)
+        ->max_redirects($max_redirects)
         ->post($url => json => \%params)
         ->result
     ;
     
-    unless ($res->is_success) {
-        return undef;
-    }
-    
+    return undef unless $res->is_success;
     return $res->json;
 }
 
@@ -83,15 +82,12 @@ sub update_object {
     my $url = join '/', $class->_url_base(), $class->_url_update($id, %params);
 
     my $res = $class->ua
-        ->max_redirects(5)
+        ->max_redirects($max_redirects)
         ->put($url => json => \%params)
         ->result
     ;
     
-    unless ($res->is_success) {
-        return undef;
-    }
-    
+    return undef unless $res->is_success;
     return $res->json;
 }
 
@@ -101,15 +97,12 @@ sub delete_object {
     my $url = join '/', $class->_url_base(), $class->_url_delete($id);
 
     my $res = $class->ua
-        ->max_redirects(5)
+        ->max_redirects($max_redirects)
         ->delete($url)
         ->result
     ;
     
-    unless ($res->is_success) {
-        return undef;
-    }
-    
+    return undef unless $res->is_success;
     return $res->json;
 }
 

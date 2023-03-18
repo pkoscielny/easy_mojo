@@ -117,6 +117,17 @@ sub response_404 {
 }
 
 
+# 503 handler - service unavailable. 
+sub response_503 {
+    my ($self, $message) = @_;
+
+    my %params;
+    $params{status} = 503;
+
+    $self->response(%params);
+}
+
+
 sub response_empty_list {
     my ($self) = @_;
 

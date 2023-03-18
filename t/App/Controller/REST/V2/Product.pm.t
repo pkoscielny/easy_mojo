@@ -12,24 +12,28 @@ use lib Cwd::realpath() .'/lib';
 ## Configuration ##
 ###################
 
-use Test::More tests => 71;
+use Test::More tests => 83;
 use Test::NoWarnings;
-# use Test::Differences;
 use Test::MockModule;
 # use Test::MockObject;
+# use Test::Differences;
 # use Test::Mojo::More;
 
 # Turn off logs.
 $ENV{MOJO_MODE} = 'test';
 
 use Test::Mojo::App;
+use Test::Model::WSGateway;
 
 # Should be always via 'require' and always after call prepare_test_db_env().
 require Model::WSGateway::DummyJSON::Product;
 
 
-#TODO: try to add separate lib with monkey patches for this kind of tests.
+# Mocking object for Mojo::UserAgent.
+my $ua_mock = Test::Model::WSGateway->ua_mock;
+
 my $ws_gateway = new Test::MockModule('Model::WSGateway');
+$ws_gateway->redefine('ua', sub {$ua_mock});
 
 my $product_1 = {
     "brand" => "Apple",
@@ -78,13 +82,6 @@ my $updated_product = {
     title => 'updated product', 
 };
 
-$ws_gateway
-    ->redefine('get_object', sub { $product_1 })
-    ->redefine('get_object_list', sub { [ $product_1, $product_2 ] })
-    ->redefine('add_object', sub { $new_product })
-    ->redefine('update_object', sub { $updated_product })
-    ;
-
 
 ###################
 ##     Tests     ##
@@ -98,16 +95,31 @@ my $t = Test::Mojo::App->new('App');
 ### Testing list action.
 ###
 
+$ua_mock->is_success(0);
 $t->get_ok('/api/v2/products.json')
     ->status_is(200)
-    ->data_is([$product_1, $product_2])
+    ->data_is(undef)
     ;
 
+$ua_mock->is_success(1);
+$ua_mock->json([$product_2, $product_1]);
+$t->get_ok('/api/v2/products.json')
+    ->status_is(200)
+    ->data_is([$product_2, $product_1])
+    ;
 
 ###
 ### Testing get action.
 ###
 
+$ua_mock->is_success(0);
+$t->get_ok('/api/v2/products/1.json')
+    ->status_is(404)
+    ->data_is(undef)
+    ;
+
+$ua_mock->is_success(1);
+$ua_mock->json($product_1);
 $t->get_ok('/api/v2/products/1.json')
     ->status_is(200)
     ->data_is($product_1)
@@ -130,6 +142,16 @@ $t->post_ok('/api/v2/products.json' => json => {
     ->json_is('/message', 'WRONG_ID_FIELD')
     ;
 
+$ua_mock->is_success(0);
+$t->post_ok('/api/v2/products.json' => json => {
+        %$new_product,
+    })
+    ->status_is(503)
+    ->data_is(undef)
+    ;
+
+$ua_mock->is_success(1);
+$ua_mock->json($new_product);
 $t->post_ok('/api/v2/products.json' => json => {
         %$new_product,
     })
@@ -154,6 +176,16 @@ $t->put_ok('/api/v2/products/1.json' => json => {
     ->json_is('/message', 'WRONG_ID_FIELD')
     ;
 
+$ua_mock->is_success(0);
+$t->put_ok('/api/v2/products/1.json' => json => {
+        %$updated_product,
+    })
+    ->status_is(404)
+    ->data_is(undef)
+    ;
+
+$ua_mock->is_success(1);
+$ua_mock->json($updated_product);
 $t->put_ok('/api/v2/products/1.json' => json => {
         %$updated_product,
     })
