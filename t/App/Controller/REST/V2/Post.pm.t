@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 
-# carton exec perl t/App/Controller/REST/V2/Product.pm.t
+# carton exec perl t/App/Controller/REST/V2/Post.pm.t
 
 use strict;
 use warnings;
@@ -12,7 +12,7 @@ use lib Cwd::realpath() .'/lib';
 ## Configuration ##
 ###################
 
-use Test::More tests => 83;
+use Test::More tests => 53;
 use Test::NoWarnings;
 use Test::MockModule;
 # use Test::MockObject;
@@ -26,7 +26,7 @@ use Test::Mojo::App;
 use Test::Model::WSGateway;
 
 # Should be always via 'require' and always after call prepare_test_db_env().
-require Model::WSGateway::DummyJSON::Product;
+require Model::WSGateway::JSONPlaceholder::Post;
 
 
 # Mocking object for Mojo::UserAgent.
@@ -36,50 +36,25 @@ my $ws_gateway = new Test::MockModule('Model::WSGateway');
 $ws_gateway->redefine('ua', sub {$ua_mock});
 
 my $object_1 = {
-    "brand" => "Apple",
-    "category" => "smartphones",
-    "description" => "An apple mobile which is nothing like apple",
-    "discountPercentage" => 12.96,
+    "userId" => 1,
     "id" => 1,
-    "images" => [
-      "https://i.dummyjson.com/data/products/1/1.jpg",
-      "https://i.dummyjson.com/data/products/1/2.jpg",
-      "https://i.dummyjson.com/data/products/1/3.jpg",
-      "https://i.dummyjson.com/data/products/1/4.jpg",
-      "https://i.dummyjson.com/data/products/1/thumbnail.jpg"
-    ],
-    "price" => 549,
-    "rating" => 4.69,
-    "stock" => 94,
-    "thumbnail" => "https://i.dummyjson.com/data/products/1/thumbnail.jpg",
-    "title" => "iPhone 9",
+    "title" => "sunt aut facere repellat provident occaecati excepturi optio reprehenderit",
+    "body" => "quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto"
 };
 
 my $object_2 = {
-    "brand" => "Apple",
-    "category" => "smartphones",
-    "description" => "SIM-Free, Model A19211 6.5-inch Super Retina HD display with OLED technology A12 Bionic chip with ...",
-    "discountPercentage" => 17.94,
-    "id" => 2,
-    "images" => [
-      "https://i.dummyjson.com/data/products/2/1.jpg",
-      "https://i.dummyjson.com/data/products/2/2.jpg",
-      "https://i.dummyjson.com/data/products/2/3.jpg",
-      "https://i.dummyjson.com/data/products/2/thumbnail.jpg"
-    ],
-    "price" => 899,
-    "rating" => 4.44,
-    "stock" => 34,
-    "thumbnail" => "https://i.dummyjson.com/data/products/2/thumbnail.jpg",
-    "title" => "iPhone X",
+    "userId" => 2,
+    "id" => 11,
+    "title" => "et ea vero quia laudantium autem",
+    "body" => "delectus reiciendis molestiae occaecati non minima eveniet qui voluptatibus\naccusamus in eum beatae sit\nvel qui neque voluptates ut commodi qui incidunt\nut animi commodi"
 };
 
 my $new_object = { 
-    title => 'new product', 
+    title => 'new post', 
 };
 
 my $updated_object = {
-    title => 'updated product', 
+    title => 'updated post', 
 };
 
 
@@ -96,19 +71,14 @@ my $t = Test::Mojo::App->new('App');
 ###
 
 $ua_mock->is_success(0);
-$t->get_ok('/api/v2/products.json')
+$t->get_ok('/api/v2/posts.json')
     ->status_is(200)
     ->data_is(undef)
     ;
 
 $ua_mock->is_success(1);
-$ua_mock->json({
-    limit => 2,
-    skip => 0,
-    total => 100,
-    products => [$object_2, $object_1]
-});
-$t->get_ok('/api/v2/products.json')
+$ua_mock->json([$object_2, $object_1]);
+$t->get_ok('/api/v2/posts.json')
     ->status_is(200)
     ->data_is([$object_2, $object_1])
     ;
@@ -118,14 +88,14 @@ $t->get_ok('/api/v2/products.json')
 ###
 
 $ua_mock->is_success(0);
-$t->get_ok('/api/v2/products/1.json')
+$t->get_ok('/api/v2/posts/1.json')
     ->status_is(404)
     ->data_is(undef)
     ;
 
 $ua_mock->is_success(1);
 $ua_mock->json($object_1);
-$t->get_ok('/api/v2/products/1.json')
+$t->get_ok('/api/v2/posts/1.json')
     ->status_is(200)
     ->data_is($object_1)
     ;
@@ -135,12 +105,12 @@ $t->get_ok('/api/v2/products/1.json')
 ### Testing add action.
 ###
 
-$t->post_ok('/api/v2/products.json')
+$t->post_ok('/api/v2/posts.json')
     ->status_is(400)
     ->json_is('/message', 'EMPTY_JSON_PARAMS')
     ;
 
-$t->post_ok('/api/v2/products.json' => json => {
+$t->post_ok('/api/v2/posts.json' => json => {
         id => 4,  # invalid field to write.
     })
     ->status_is(400)
@@ -148,7 +118,7 @@ $t->post_ok('/api/v2/products.json' => json => {
     ;
 
 $ua_mock->is_success(0);
-$t->post_ok('/api/v2/products.json' => json => {
+$t->post_ok('/api/v2/posts.json' => json => {
         %$new_object,
     })
     ->status_is(503)
@@ -157,7 +127,7 @@ $t->post_ok('/api/v2/products.json' => json => {
 
 $ua_mock->is_success(1);
 $ua_mock->json($new_object);
-$t->post_ok('/api/v2/products.json' => json => {
+$t->post_ok('/api/v2/posts.json' => json => {
         %$new_object,
     })
     ->status_is(200)
@@ -169,12 +139,12 @@ $t->post_ok('/api/v2/products.json' => json => {
 ### Testing update action.
 ###
 
-$t->put_ok('/api/v2/products/1.json')
+$t->put_ok('/api/v2/posts/1.json')
     ->status_is(400)
     ->json_is('/message', 'EMPTY_JSON_PARAMS')
     ;
 
-$t->put_ok('/api/v2/products/1.json' => json => {
+$t->put_ok('/api/v2/posts/1.json' => json => {
         id => 4,  # invalid field to write.
     })
     ->status_is(400)
@@ -182,7 +152,7 @@ $t->put_ok('/api/v2/products/1.json' => json => {
     ;
 
 $ua_mock->is_success(0);
-$t->put_ok('/api/v2/products/1.json' => json => {
+$t->put_ok('/api/v2/posts/1.json' => json => {
         %$updated_object,
     })
     ->status_is(404)
@@ -191,7 +161,7 @@ $t->put_ok('/api/v2/products/1.json' => json => {
 
 $ua_mock->is_success(1);
 $ua_mock->json($updated_object);
-$t->put_ok('/api/v2/products/1.json' => json => {
+$t->put_ok('/api/v2/posts/1.json' => json => {
         %$updated_object,
     })
     ->status_is(200)
@@ -203,7 +173,7 @@ $t->put_ok('/api/v2/products/1.json' => json => {
 ### Testing patch action.
 ###
 
-$t->patch_ok('/api/v2/products/1.json')
+$t->patch_ok('/api/v2/posts/1.json')
     ->status_is(404)
     ;
 
@@ -212,8 +182,16 @@ $t->patch_ok('/api/v2/products/1.json')
 ### Testing delete action.
 ###
 
-$t->delete_ok('/api/v2/products/1.json')
+$ua_mock->is_success(0);
+$t->delete_ok('/api/v2/posts/1.json')
     ->status_is(404)
+    ;
+
+$ua_mock->is_success(1);
+$ua_mock->json($object_1);
+$t->delete_ok('/api/v2/posts/1.json')
+    ->status_is(200)
+    ->data_is($object_1)
     ;
 
 
