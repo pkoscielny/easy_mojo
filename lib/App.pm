@@ -12,7 +12,6 @@ TODO:
  - dev: logs on stderr
  - 
 * add generators for different drivers in bin/run_migrations.pl
-* add more unit tests for existing resources
 * add meta implementation: elapsed_time for getting data from model; items for list, etc
 * implement model for postgres with migrations, test db caching, etc
 * add onlice API doc (e.g. Swagger)

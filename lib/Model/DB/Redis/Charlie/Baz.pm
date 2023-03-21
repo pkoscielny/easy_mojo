@@ -14,7 +14,7 @@ use Mojo::Util qw( decamelize );
 # sub writable_fields {()}
 
 sub _get_key_prefix {
-    return 'easy_mojo:'.decamelize(__PACKAGE__).':';
+    return "easy_mojo:$ENV{MOJO_MODE}:".decamelize(__PACKAGE__).':';
 }
 
 1;
