@@ -45,11 +45,11 @@ sub writable_fields {()}
 
 #TODO: reimplement set_fields - implement set fields cascade: https://metacpan.org/pod/Rose::DB::Object#OBJECT-METHODS
 sub set_fields {
-    my ($self, %params) = @_;
+    my ($self, $rh_fields, %params) = @_;
 
-    $self->handle_unwritable_fields(\%params);
+    $self->handle_unwritable_fields($rh_fields);
 
-    while (my($field, $value) = each %params) {
+    while (my($field, $value) = each %$rh_fields) {
         $self->$field($value);
     }
 
@@ -57,6 +57,7 @@ sub set_fields {
 }
 
 
+# Returns object.
 sub _get_object {
     my ($class, 
         $id,     # PK.
@@ -79,8 +80,10 @@ sub get_object {
         %params  # rewrite speculative, etc (https://metacpan.org/pod/Rose::DB::Object#OBJECT-METHODS see load).
     ) = @_;
 
-    my $object = $class->_get_object($id, %params) || return undef;
-    return $object->as_tree;
+    my $object = $class->_get_object($id, %params);
+    my $data = $object ? $object->as_tree() : undef;
+    my $meta = {};
+    return ($data, $meta);
 }
 
 
@@ -96,39 +99,44 @@ sub get_object_list {
         #debug => 1, # watch SQL queries directly
     );
 
-    return [ map { $_->as_tree } @$objects ];
+    my $meta = {};
+    my $data = [ map { $_->as_tree } @$objects ];
+    return ($data, $meta);
 }
 
 
 sub add_object {
-    my ($class, %params) = @_;
+    my ($class, $rh_fields) = @_;
 
     my $object = $class->new;
-    $object->set_fields(%params);
+    $object->set_fields($rh_fields);
     $object->save(cascade => 1);
 
-    return $object->as_tree;
+    my $meta = {};
+    return ($object->as_tree, $meta);
 }
 
 
 sub update_object {
-    my ($class, $id, %params) = @_;
+    my ($class, $id, $rh_fields, %params) = @_;
 
     my $object = $class->_get_object($id, %params);
-    $object->set_fields(%params);
+    $object->set_fields($rh_fields);
     $object->save(cascade => 1);  # changes_only => 1
 
-    return $object->as_tree;
+    my $meta = {};
+    return ($object->as_tree, $meta);
 }
 
 
 sub delete_object {
-    my ($class, $id) = @_;
+    my ($class, $id, %params) = @_;
 
-    my $object = $class->_get_object($id);
+    my $object = $class->_get_object($id, %params);
     $object->delete();  # cascade => 1 ?
 
-    return $object->as_tree;
+    my $meta = {};
+    return ($object->as_tree, $meta);
 }
 
 

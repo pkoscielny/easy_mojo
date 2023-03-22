@@ -76,7 +76,7 @@ my $objects = [
     },
 ];
 foreach my $object (@$objects) {
-    my $new_one = Model::DB::Redis::Charlie::Baz->add_object(%$object);
+    my ($new_one) = Model::DB::Redis::Charlie::Baz->add_object($object);
     $object->{_id} = $new_one->{_id};
 }
 

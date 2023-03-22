@@ -69,7 +69,7 @@ sub writable_fields {()}
 
 
 sub get_object {
-    my ($class, $id) = @_;
+    my ($class, $id, %params) = @_;
     my $conn = $class->_redis_connection();
 
     my $key  = $class->_get_key($id);
@@ -79,7 +79,8 @@ sub get_object {
     $class->filter_out_unreadable_fields($rh);
     $rh->{_id} = $class->_get_id($id);
 
-    return $rh;
+    my $meta = {};
+    return ($rh, $meta);
 }
 
 
@@ -91,46 +92,51 @@ sub get_object_list {
 
     my @keys = $class->get_keys('*', sorted => 1);
 
-    return [ map { $class->get_object($_) } @keys ];
+    my $resources = [ map { ($class->get_object($_))[0] } @keys ];
+    my $meta = {};
+    return ($resources, $meta);
 }
 
 
 sub add_object {
-    my ($class, %params) = @_;
+    my ($class, $rh_fields, %params) = @_;
     my $conn = $class->_redis_connection();
 
-    my $id   = $params{_id} || _generate_id();
+    my $id   = $rh_fields->{_id} || _generate_id();
     my $key  = $class->_get_key($id);
 
-    $class->handle_unwritable_fields(\%params);
-    my $text = $json->encode(\%params);
+    $class->handle_unwritable_fields($rh_fields);
+    my $text = $json->encode($rh_fields);
 
     $conn->set($key, $text);
 
-    $params{_id} = $class->_get_id($id);
-    return \%params;
+    $rh_fields->{_id} = $class->_get_id($id);
+
+    my $meta = {};
+    return ($rh_fields, $meta);
 }
 
 
 sub update_object {
-    my ($class, $id, %params) = @_;
+    my ($class, $id, $rh_fields, %params) = @_;
     my $conn = $class->_redis_connection();
 
-    $params{_id} = $id;
-    return $class->add_object(%params);
+    $rh_fields->{_id} = $id;
+
+    return $class->add_object($rh_fields);
 }
 
 
 sub delete_object {
-    my ($class, $id) = @_;
+    my ($class, $id, %params) = @_;
     my $conn = $class->_redis_connection();
 
-    my $rh  = $class->get_object($id);
+    my ($resource, $meta) = $class->get_object($id);
     my $key = $class->_get_key($id);
 
     $conn->del($key);
 
-    return $rh;
+    return ($resource, $meta);
 }
 
 

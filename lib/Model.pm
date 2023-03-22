@@ -35,36 +35,53 @@ https://jsonplaceholder.typicode.com/
 
 sub get_object {
     die "Model 'get' method is required";
+
+    my ($class, $id, %params) = @_;
+    return ('rh_resource', 'rh_meta');
 }
 
 
 sub get_object_list {
     die "Model 'get_list' method is required";
+
+    my ($class, %params) = @_;
+    return ('rah_resources', 'rh_meta');
 }
 
 
 sub add_object {
     die "Model 'add' method is required";
+
+    my ($class, $rh_fields, %params) = @_;
+    return ('rh_resource', 'rh_meta');
 }
 
 
 sub update_object {
     die "Model 'update' method is required";
+
+    my ($class, $id, $rh_fields, %params) = @_;
+    return ('rh_resource', 'rh_meta');
 }
 
 
 sub delete_object {
     die "Model 'delete' method is required";
+    
+    my ($class, $id, %params) = @_;
+    return ('rh_resource', 'rh_meta');
 }
 
 
 sub readable_fields {
     die "Model 'readable_fields' method is required";
+    return ();
 }
 
 
 sub writable_fields {
     die "Model 'writable_fields' method is required";
+    return ();
 }
 
 

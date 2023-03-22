@@ -12,6 +12,7 @@ use lib Cwd::realpath() .'/lib';
 ## Configuration ##
 ###################
 
+use Clone 'clone';
 use Test::More tests => 95;
 use Test::NoWarnings;
 # use Test::Differences;
@@ -60,7 +61,7 @@ my $bars = [
     { id => 2, name => 'bar2' },
     { id => 3, name => 'bar3' },
 ];
-Model::DB::ORM::Bravo::Bar->add_object(%$_) for @$bars;
+Model::DB::ORM::Bravo::Bar->add_object(clone $_) for @$bars;
 
 $t->get_ok('/api/v1/bars.json')
     ->status_is(200)

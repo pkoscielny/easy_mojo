@@ -4,6 +4,7 @@ use strict;
 use warnings;
 
 use List::Util qw( any );
+use Time::HiRes qw(gettimeofday tv_interval);
 
 use base qw(Model::WSGateway);
 
@@ -33,7 +34,7 @@ sub _url_list {
 }
 
 
-# Reimplement get_object_list due to more complex structure returned by dummyjson ws.
+# Method get_object_list reimplemented due to more complex structure returned by dummyjson ws.
 # Unfortunately the DummyJSON has different list structures depending on endpoint:
 # * products -> hashref
 # * product categories -> arrayref
@@ -42,19 +43,25 @@ sub get_object_list {
     my ($class, %params) = @_;
     my $url = join '/', $class->_url_base(), $class->_url_list(%params);
 
+    my $time_before = [gettimeofday];
+    
     my $res = $class->ua
         ->max_redirects(5)
         ->get($url)
         ->result
-    ;    
-    return undef unless $res->is_success;
+    ; 
+
+    my $meta = {
+        ws_gateway_elapsed_time => tv_interval($time_before, [gettimeofday]),
+    };
+
+    return (undef, $meta) unless $res->is_success;
  
     my $result = $res->json;
-    return $result if ref $result eq 'ARRAY';
+    return ($result, $meta) if ref $result eq 'ARRAY';
 
     # Split fields between data and meta.
     my $data;
-    my $meta = {};
     foreach my $field (keys %$result) {
         if (any { $_ eq $field } @meta_fields) {
             $meta->{$field} = delete $result->{$field} ;
@@ -64,7 +71,7 @@ sub get_object_list {
         }
     }
 
-    return $data;
+    return ($data, $meta);
 }
 
 

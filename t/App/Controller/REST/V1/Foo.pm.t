@@ -12,7 +12,7 @@ use lib Cwd::realpath() .'/lib';
 ## Configuration ##
 ###################
 
-use Test::More tests => 59;
+use Test::More tests => 62;
 use Test::NoWarnings;
 # use Test::Differences;
 # use Test::MockModule;
@@ -54,17 +54,17 @@ $t->get_ok('/api/v1/alt_foo.json')
     ->data_is([])
     ;
 
-my $foos = [
+my $objects = [
     { id => 1, name => 'foo1' },
     { id => 2, name => 'foo2' },
     { id => 3, name => 'foo3' },
 ];
-Model::DB::ORM::Alpha::Foo->add_object(%$_) for @$foos;
+Model::DB::ORM::Alpha::Foo->add_object($_) for @$objects;
 
 $t->get_ok('/api/v1/alt_foo.json')
     ->status_is(200)
     # ->json_is('/meta/items', 3)
-    ->data_is($foos)
+    ->data_is($objects)
     ;
 
 # Check other response formats.
@@ -141,11 +141,11 @@ $t->get_ok('/api/v1/alt_foo.html')
 ### Testing get action.
 ###
 
-foreach my $foo (@$foos) {
-    $t->get_ok("/api/v1/alt_foo/$foo->{id}.json")
+foreach my $object (@$objects) {
+    $t->get_ok("/api/v1/alt_foo/$object->{id}.json")
     # $t->get_ok('/api/v1/alt_foo/1')
         ->status_is(200)
-        ->json_is('/data' => $foo)
+        ->data_is($object)
         ;
 }
 
@@ -153,19 +153,17 @@ $t->get_ok('/api/v1/alt_foo/4.json')
     ->status_is(404)
     ;
 
+
 ### Only get and list are available for this endpoint.
 
 ###
 ### Testing add action.
 ###
 
-my $new_foo = { name => 'new_foo' };
-$t->post_ok('/api/v1/alt_foo.json' => json => {
-        %$new_foo,
-    })
+$t->post_ok('/api/v1/alt_foo.json')
     ->status_is(404)
-    # ->data_is($new_foo)
     ;
+
 
 ###
 ### Testing update action.
@@ -175,6 +173,7 @@ $t->put_ok('/api/v1/alt_foo/1.json')
     ->status_is(404)
     ;
 
+
 ###
 ### Testing patch action.
 ###
@@ -182,6 +181,7 @@ $t->put_ok('/api/v1/alt_foo/1.json')
 $t->patch_ok('/api/v1/alt_foo/1.json')
     ->status_is(404)
     ;
+
 
 ###
 ### Testing delete action.

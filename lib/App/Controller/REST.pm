@@ -54,6 +54,20 @@ sub get_resource_list {
 }
 
 
+sub _get_and_authorize_resource {
+    my ($self) = @_;
+
+    my $id = $self->param('id');
+    my ($resource, $meta) = $self->get_resource($id);
+    $self->response_404 unless $resource;
+    $self->log->debug('resource: '. Dumper $resource);
+
+    $self->authorize_resource($resource);
+
+    return ($id, $resource, $meta);
+}
+
+
 ###
 ### REST actions:
 ###
@@ -67,11 +81,11 @@ sub list {
     my $list_params = $self->get_param();
     $self->log->debug('list params: '. Dumper $list_params);
 
-    my $resource = $self->get_resource_list(%$list_params); # or $self->response_empty_list;
+    my ($resource, $meta) = $self->get_resource_list(%$list_params) or $self->response_empty_list;
     
     $resource = $self->model->filter_out_unreadable_fields($resource);
 
-    $self->response(data => $resource);
+    $self->response(data => $resource, meta => $meta);
 }
 
 
@@ -79,14 +93,10 @@ sub get {
     my ($self) = @_;
     $self->log->info('get');
 
-    # Gets an object by id or 404.
-    my $resource = $self->get_resource() or $self->response_404;
-    $self->log->debug('resource: '. Dumper $resource);
-
-    $self->authorize_params($resource);
+    my ($id, $resource, $meta) = $self->_get_and_authorize_resource;
     $resource = $self->model->filter_out_unreadable_fields($resource);
 
-    $self->response(data => $resource);
+    $self->response(data => $resource, meta => $meta);
 }
 
 
@@ -100,10 +110,11 @@ sub add {
     $self->validate_fields_to_save($params);
     $self->authorize_params($params);
 
-    my $resource = $self->model->add_object(%$params) or $self->response_503;
+    my ($resource, $meta) = $self->model->add_object($params);
+    $self->response_503 unless $resource;
     $resource = $self->model->filter_out_unreadable_fields($resource);
 
-    $self->response(data => $resource);
+    $self->response(data => $resource, meta => $meta);
 }
 
 
@@ -111,9 +122,7 @@ sub update {
     my ($self) = @_;
     $self->log->info('update');
 
-    my $id = $self->param('id');
-    my $resource = $self->get_resource($id) or $self->response_404;
-    $self->log->debug('resource: '. Dumper $resource);
+    my ($id, $resource, $meta) = $self->_get_and_authorize_resource;
 
     my $params = $self->req->json() or $self->response_400('EMPTY_JSON_PARAMS');
     $self->log->debug('params: '. Dumper $params);
@@ -121,10 +130,11 @@ sub update {
     $self->validate_fields_to_save($params);
     $self->authorize_params($params);
 
-    $resource = $self->model->update_object($id, %$params) or $self->response_503;
+    ($resource, $meta) = $self->model->update_object($id, $params);
+    $self->response_503 unless $resource;
     $resource = $self->model->filter_out_unreadable_fields($resource);
 
-    $self->response(data => $resource);
+    $self->response(data => $resource, meta => $meta);
 }
 
 
@@ -140,15 +150,13 @@ sub delete {
     my ($self) = @_;
     $self->log->info('delete');
 
-    my $id = $self->param('id');
-    my $resource = $self->get_resource($id) or $self->response_404;
+    my ($id, $resource, $meta) = $self->_get_and_authorize_resource;
 
-    $self->authorize_resource($resource);
-
-    $resource = $self->model->delete_object($id) or $self->response_503;
+    ($resource, $meta) = $self->model->delete_object($id);
+    $self->response_503 unless $resource;
     $resource = $self->model->filter_out_unreadable_fields($resource);
     
-    $self->response(data => $resource);
+    $self->response(data => $resource, meta => $meta);
 }
 
 
