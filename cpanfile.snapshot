@@ -131,6 +131,12 @@ DISTRIBUTIONS
     requirements:
       Module::Build::Tiny 0.035
       perl 5.006001
+  DBD-Pg-3.16.1
+    pathname: T/TU/TURNSTEP/DBD-Pg-3.16.1.tar.gz
+    provides:
+      Bundle::DBD::Pg v3.16.1
+      DBD::Pg v3.16.1
+    requirements:
   DBD-SQLite-1.72
     pathname: I/IS/ISHIGAKI/DBD-SQLite-1.72.tar.gz
     provides:

@@ -8,6 +8,7 @@ use lib "$Bin/../lib";
 
 use Getopt::Long;
 use Pod::Usage;
+use DBI;
 
 use Model::DB::Util;
 
@@ -24,21 +25,33 @@ pod2usage(1) and exit if $args{help};
 
 prepare_test_db_env() if $args{test};
 
+
+my $dbh = DBI->connect("dbi:Pg:dbname=$ENV{POSTGRES_DB};host=$ENV{POSTGRES_HOST};port=$ENV{POSTGRES_PORT}",  
+       $ENV{POSTGRES_USER},
+       $ENV{POSTGRES_PASSWORD},
+       {AutoCommit => 1, RaiseError => 1}
+    ) or die $DBI::errstr;
+
 my $db_config = get_db_config('orm');
-my @sqlite_configs = grep { $_->{driver} eq 'sqlite' } values %$db_config;
+my @pg_configs = grep { $_->{driver} eq 'pg' } values %$db_config;
 
-foreach my $rh_config (@sqlite_configs) {
-    my $full_path = $rh_config->{database};
+foreach my $rh_config (@pg_configs) {
+    my $db_name = $rh_config->{database};
 
-    if (-e $full_path and $args{force}) {
-        print "Remove database: $full_path\n" if $args{verbose};
-        unlink $full_path or die "Could not remove database $full_path: $!";
+    if ($args{force}) {
+        print "Drop database if exists: $db_name\n" if $args{verbose};
+        $dbh->do("DROP DATABASE IF EXISTS $db_name") or die $dbh->errstr;
     }
 
-    print "Create database: $full_path\n" if $args{verbose};
-    system "sqlite3 $full_path 'VACUUM;'" and die "Could not create database: $full_path\n";
+    if ($dbh->selectcol_arrayref("SELECT COUNT(*) FROM pg_database WHERE datname = '$db_name'")->[0]) {
+        print "Database exists: $db_name\n" if $args{verbose};
+    } else {
+        print "Create database: $db_name\n" if $args{verbose};
+        $dbh->do("CREATE DATABASE $db_name") or die $dbh->errstr;
+    }
 }
 
+$dbh->disconnect or warn $dbh->errstr;
 
 1;
 
@@ -49,7 +62,7 @@ __END__
 
 =head1 NAME
 
- generate_sqlite_db.pl
+ generate_pg_db.pl
 
 =head1 SYNOPSIS
 

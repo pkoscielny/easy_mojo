@@ -1,0 +1,15 @@
+FROM postgres:15.2-alpine 
+
+# Add same user as host user to prevent from permission problems.
+# https://www.fullstaq.com/knowledge-hub/blogs/docker-and-the-host-filesystem-owner-matching-problem
+ARG uid
+ARG gid
+ARG user_name
+ARG group_name
+
+USER root
+
+RUN addgroup --gid $gid $group_name && \
+    adduser --uid $uid -G $group_name --gecos "" --disabled-password $user_name
+
+USER $user_name

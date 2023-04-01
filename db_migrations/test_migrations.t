@@ -16,11 +16,6 @@ use lib Cwd::realpath() .'/lib';
 use Test::More tests => 5;
 use Test::NoWarnings;
 
-use Model::DB::Util;
-
-# Prepare connections to test databases.
-prepare_test_db_env();
-
 
 ###################
 ##     Tests     ##

@@ -14,11 +14,13 @@ test_cc:
 prepare_test_database:
 	@echo "######## Preparing test databases ########"
 	perl bin/generate_sqlite_db.pl --test --force
+	perl bin/generate_pg_db.pl --test --force
 	prove -r db_migrations/test_migrations.t
 	perl bin/run_migrations.pl --test
 	perl -Ilib -e "use strict; use Model::DB::Util; cache_test_db()"
 
 prepare_database:
 	@echo "######## Preparing databases ########"
-	perl bin/generate_sqlite_db.pl --force
+	perl bin/generate_sqlite_db.pl
+	perl bin/generate_pg_db.pl
 	perl bin/run_migrations.pl

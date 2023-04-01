@@ -1,5 +1,13 @@
 #!/bin/bash 
 
+# Define local variables.
+DOCKER_COMPOSE_FILE="$PWD/docker/docker-compose.yml"
+DETACH_MODE="-d"
+SERVICE_ID=""
+DOTENV="$PWD/config/.env"
+DOTENV_TEST="$PWD/config/.env_test"
+
+
 function start {
     docker-compose -f $DOCKER_COMPOSE_FILE up $DETACH_MODE $SERVICE_ID
 }
@@ -12,28 +20,25 @@ function build {
     docker-compose -f $DOCKER_COMPOSE_FILE build
 }
 
+
+#TODO: implement -r | --rm <container_name> function.
 function help {
     echo "
     docker.sh
 
     Arguments:
-        --start   [-s | --service] [-i | --interactive]   - start (all services | given service) in interactive or detached mode.
-        --stop    [-s | --service]                        - stop (all services | given service).
-        --restart [-s | --service]                        - run stop and start.
-        -b | --build                                      - build all images.
-        -h | --help                                       - print this help.
+        --start   [-s | --service <name>] [-i | --interactive] - start (all services | given service) in interactive or detached mode for unit tests or not.
+        --stop    [-s | --service <name>]                      - stop (all services | given service).
+        --restart [-s | --service <name>]                      - run stop and start.
+        -b | --build                                           - build all images.
+        -h | --help                                            - print this help.
     "
 }
 
-# Define local variables.
-DOCKER_COMPOSE_FILE="$PWD/docker/docker-compose.yml"
-DETACH_MODE="-d"
-SERVICE_ID=""
-
 
 # Export variables.
-if [ -f "$PWD/config/.env" ]; then
-    export $(grep -v '^#' "$PWD/config/.env" | xargs)
+if [ -f "$DOTENV" ]; then
+    export $(grep -v '^#' "$DOTENV" | xargs -d '\n')
 fi
 export USER_ID=$(id -u)
 export GROUP_ID=$(id -g)

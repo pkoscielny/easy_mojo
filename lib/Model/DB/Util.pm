@@ -9,6 +9,7 @@ use Carp 'confess';
 use File::Copy;
 use Data::Dumper;
 use List::Util qw( none );
+use Dotenv -load => 'config/.env';
 
 use base qw( Exporter );
 our @EXPORT_OK = qw/
@@ -81,7 +82,6 @@ sub _get_db_config_env {
 }
 
 
-#TODO: add more fields if needed.
 sub _validate_fields {
     my ($rh) = @_;
 
@@ -112,8 +112,13 @@ sub prepare_test_db_env {
             _prepare_env($dsn, 'database', $test_database);
             _prepare_env($dsn, 'domain', 'test');
         }, 
-        mysql    => sub { confess "Implementation for mysql test env generator required" },
-        postgres => sub { confess "Implementation for postgres test env generator required" },
+        pg => sub { 
+            my ($dsn, $rh_config) = @_;
+            my $test_database = 'test_'. $rh_config->{database};
+            _prepare_env($dsn, 'database', $test_database);
+            _prepare_env($dsn, 'domain', 'test');
+        },
+        mysql => sub { confess "Implementation for mysql test env generator required" },
         # ...
     );
 

@@ -21,10 +21,9 @@ requires 'Excel::Writer::XLSX', '1.10';
 
 requires 'Rose::DB::Object', '0.820';
 requires 'DBD::SQLite', '1.72';
+requires 'DBD::Pg';
 #requires 'Rose::DB::MySQL';
 #requires 'Rose::DB::Pg';
 #requires 'Rose::DB::SQLite';
 #requires 'DBD::mysql';
-#requires 'DBD::Pg';
-
 requires 'Redis', '2.000';

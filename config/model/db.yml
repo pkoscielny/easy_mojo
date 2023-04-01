@@ -13,20 +13,19 @@ bravo:
   driver: sqlite
   database: db/bravo.db
   domain: dev
-  password:
 charlie:
   driver: redis
   server: 'redis:6379'
   name: backend
   conservative_reconnect: 1
   debug: 0
-# one_pg:
-#   driver: 'pg'
-#   database: 'one'
-#   domain: 'dev'
-#   host: 'localhost'
-#   username: 'username'
-#   password: '***'
+delta:
+  driver: pg
+  database: delta_db
+  domain: dev
+  host: postgres
+  username: username
+  password: '***'
 # one_mysql:
 #   disabled: 1
 #   driver: 'mysql'
