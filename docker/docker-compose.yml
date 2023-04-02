@@ -1,6 +1,6 @@
 version: '3.5'
 services:
-  mojo:
+  easy_mojo:
     build: 
       context: .
       dockerfile: "${PWD}/docker/Dockerfile.mojo"
@@ -27,15 +27,6 @@ services:
       - backend
 
   postgresql:
-    # build: 
-    #   context: .
-    #   dockerfile: "${PWD}/docker/Dockerfile.postgres"
-    #   args:
-    #     uid: ${USER_ID}
-    #     gid: ${GROUP_ID}
-    #     user_name: ${USER_NAME}
-    #     group_name: ${GROUP_NAME}
-    # image: postgres:latest
     image: postgres:15.2-alpine
     container_name: postgres
     restart: always
@@ -45,16 +36,16 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       # Read about PGDATA here: https://hub.docker.com/_/postgres
       # PGDATA: /var/lib/postgresql/data/pgdata
-    # user: "${USER_ID}:${GROUP_ID}"
     # volumes:
       # - ${PWD}/${POSTGRES_DATA_DIR}:/var/lib/postgresql/data
-      # - ${PWD}/docker/postgres_entrypoint.sh:/docker-entrypoint-initdb.d/postgres_entrypoint.sh 
     # Mapping ports: host:container
     ports:
       - "5432:5432"
     networks:
       - backend
 
+  # http://127.0.0.1:8080/
+  # Use credentials from config/.env
   # adminer:
   #   image: adminer
   #   restart: always

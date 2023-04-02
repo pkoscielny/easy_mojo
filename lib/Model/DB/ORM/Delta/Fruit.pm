@@ -15,6 +15,18 @@ __PACKAGE__->meta->setup(
 # or define all columns by hand.
 
 
+# What you want to see.
+sub readable_fields {qw/
+    id
+    name
+/}
+
+
+# What you want to save.
+sub writable_fields {qw/
+    name
+/}
+
 #TODO: read and decide what way will be better: 
 # https://metacpan.org/dist/Rose-DB-Object/view/lib/Rose/DB/Object/Tutorial.pod#Multiple-objects
 # Think about creating separate layer to implement all CRUD model methods: Model::DB::ORM::Object class will represent only single row.

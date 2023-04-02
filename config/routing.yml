@@ -32,7 +32,7 @@
   actions: [list, get, add, update, delete]
 # Based on PostgreSQL.
 - package_name: V1::Fruit
-  actions: [list, get, add, update, delete]
+  actions: [list, get, add, update, patch, delete]
 # Based on gateway to https://dummyjson.com.
 - package_name: V2::Product
   actions: [list, get, add, update]

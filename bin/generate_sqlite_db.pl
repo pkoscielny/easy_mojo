@@ -53,13 +53,13 @@ __END__
 
 =head1 SYNOPSIS
 
- Script for generating local SQLite databases based on config/model/orm.yml configuration.
+ Script for generating local SQLite databases based on config/model/db.yml configuration.
   
 =head1 EXAMPLES
 
  $ perl bin/generate_sqlite_db.pl
  $ perl bin/generate_sqlite_db.pl --help
- $ perl bin/generate_sqlite_db.pl --dir='db_test' -v
+ $ perl bin/generate_sqlite_db.pl --test --force -v
 
 =head1 OPTIONS
 

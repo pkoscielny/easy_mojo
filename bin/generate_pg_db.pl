@@ -8,7 +8,6 @@ use lib "$Bin/../lib";
 
 use Getopt::Long;
 use Pod::Usage;
-use DBI;
 
 use Model::DB::Util;
 
@@ -26,12 +25,7 @@ pod2usage(1) and exit if $args{help};
 prepare_test_db_env() if $args{test};
 
 
-my $dbh = DBI->connect("dbi:Pg:dbname=$ENV{POSTGRES_DB};host=$ENV{POSTGRES_HOST};port=$ENV{POSTGRES_PORT}",  
-       $ENV{POSTGRES_USER},
-       $ENV{POSTGRES_PASSWORD},
-       {AutoCommit => 1, RaiseError => 1}
-    ) or die $DBI::errstr;
-
+my $dbh = get_admin_dbh('pg');
 my $db_config = get_db_config('orm');
 my @pg_configs = grep { $_->{driver} eq 'pg' } values %$db_config;
 
@@ -66,13 +60,13 @@ __END__
 
 =head1 SYNOPSIS
 
- Script for generating local SQLite databases based on config/model/orm.yml configuration.
+ Script for generating PostgreSQL databases based on config/model/db.yml configuration.
   
 =head1 EXAMPLES
 
  $ perl bin/generate_sqlite_db.pl
  $ perl bin/generate_sqlite_db.pl --help
- $ perl bin/generate_sqlite_db.pl --dir='db_test' -v
+ $ perl bin/generate_sqlite_db.pl --test --force -v
 
 =head1 OPTIONS
 
@@ -80,7 +74,7 @@ __END__
 
 =item --test|t
 
- Generate test databases.
+ Create a test Postgres databases.
 
 =item --force|f
 

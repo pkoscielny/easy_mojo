@@ -10,10 +10,9 @@ TODO:
 * set log config depending on MOJO_MODE:
  - test: no logs
  - dev: logs on stderr
- - 
-* add generators for different drivers in bin/run_migrations.pl
+* add scaffolding
+* clean up the mess in env variables 
 * add meta implementation: elapsed_time for getting data from model; items for list, etc
-* implement model for postgres with migrations, test db caching, etc
 * add onlice API doc (e.g. Swagger)
 * run scanner: https://github.com/aquasecurity/trivy
 * implement RESTful actions as a non-blocking operations (external API calls, interactions with model objects in general)

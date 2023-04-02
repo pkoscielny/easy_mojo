@@ -10,6 +10,7 @@ use File::Copy;
 use Data::Dumper;
 use List::Util qw( none );
 use Dotenv -load => 'config/.env';
+use DBI;
 
 use base qw( Exporter );
 our @EXPORT_OK = qw/
@@ -17,6 +18,7 @@ our @EXPORT_OK = qw/
     prepare_test_db_env
     prepare_test_db_from_cache
     cache_test_db
+    get_admin_dbh
 /;
 our @EXPORT = @EXPORT_OK;
 
@@ -96,7 +98,9 @@ sub _validate_fields {
 
 
 # Prepare env variables for tests.
+my $test_db_env_prepared = 0;
 sub prepare_test_db_env {
+    return if $test_db_env_prepared;
 
     sub _prepare_env {
         my ($dsn, $param, $value) = @_;
@@ -131,6 +135,7 @@ sub prepare_test_db_env {
         $env_generators{$driver}->($dsn, $rh_config) if exists $env_generators{$driver};
     }
 
+    $test_db_env_prepared = 1;
 }
 
 
@@ -142,6 +147,20 @@ sub prepare_test_db_from_cache {
         copy($_, $test_db_path) or confess "Copy failed: $!" for glob "$cache_path/*.db";
     }
 
+    prepare_test_db_env();
+    my $db_config = get_db_config('orm');
+
+    # For PostgreSQL.
+    while (my ($dsn, $rh_config) = each %$db_config) {
+        next if $rh_config->{driver} ne 'pg';
+        
+        my $database = $rh_config->{database};
+        my $database_orig = "${database}_orig";
+
+        my $dbh = get_admin_dbh('pg');
+        $dbh->do("DROP DATABASE IF EXISTS $database") or confess $dbh->errstr;
+        $dbh->do("CREATE DATABASE $database WITH TEMPLATE $database_orig") or confess $dbh->errstr;
+    }
 }
 
 
@@ -152,6 +171,38 @@ sub cache_test_db {
     mkdir $cache_path or confess "Make dir $cache_path failed: $!" unless -e $cache_path;
     copy($_, $cache_path) or confess "Copy failed: $!" for glob "$test_db_path/*.db";
 
+    prepare_test_db_env();
+    my $db_config = get_db_config('orm');
+
+    # For PostgreSQL.
+    while (my ($dsn, $rh_config) = each %$db_config) {
+        next if $rh_config->{driver} ne 'pg';
+
+        my $database = $rh_config->{database};
+        my $database_orig = "${database}_orig";
+
+        my $dbh = get_admin_dbh('pg');
+        $dbh->do("DROP DATABASE IF EXISTS $database_orig") or confess $dbh->errstr;
+        $dbh->do("CREATE DATABASE $database_orig WITH TEMPLATE $database") or confess $dbh->errstr;
+    }
+}
+
+# I cannot use get_dbh method from Model::DB::ORM::<dsn> e.g for removing database due to active handler to this database.
+# So I need to have a 'technical' connection to this DB server.
+my %admin_dbh_cache;  # disconnect will be automatically called at the end of db handler life.
+sub get_admin_dbh {
+    my ($db_type) = @_;    
+
+    if ($db_type eq 'pg') {
+
+        $admin_dbh_cache{ $db_type } //= DBI->connect("dbi:Pg:dbname=$ENV{POSTGRES_DB};host=$ENV{POSTGRES_HOST};port=$ENV{POSTGRES_PORT}",  
+            $ENV{POSTGRES_USER},
+            $ENV{POSTGRES_PASSWORD},
+            {AutoCommit => 1, RaiseError => 1}
+        ) or die $DBI::errstr;
+        
+        return $admin_dbh_cache{ $db_type };
+    }
 }
 
 

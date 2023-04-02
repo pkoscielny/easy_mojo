@@ -20,8 +20,10 @@ function build {
     docker-compose -f $DOCKER_COMPOSE_FILE build
 }
 
+function rm {
+    docker-compose -f $DOCKER_COMPOSE_FILE rm $SERVICE_ID
+}
 
-#TODO: implement -r | --rm <container_name> function.
 function help {
     echo "
     docker.sh
@@ -30,6 +32,7 @@ function help {
         --start   [-s | --service <name>] [-i | --interactive] - start (all services | given service) in interactive or detached mode for unit tests or not.
         --stop    [-s | --service <name>]                      - stop (all services | given service).
         --restart [-s | --service <name>]                      - run stop and start.
+        --rm      [-s | --service <name>]                      - remove container.
         -b | --build                                           - build all images.
         -h | --help                                            - print this help.
     "
@@ -84,6 +87,9 @@ for i in "${!ACTIONS[@]}"; do
       ;;
     -b|--build)
       build; exit
+      ;;
+    -r|--rm)
+      rm; exit
       ;;
     -h|--help)
       help; exit
