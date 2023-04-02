@@ -44,7 +44,7 @@ my $t = Test::Mojo::App->new('App');
 ### Testing list action.
 ###
 
-$t->get_ok('/api/v1/bazs.json')
+$t->get_ok('/api/v1/bazzes.json')
     ->status_is(200)
     # ->json_is('/meta/items', 0)
     ->json_hasnt('/meta/items')  # to be sure that I won't forget add new tests for the 'items' feature.
@@ -80,7 +80,7 @@ foreach my $object (@$objects) {
     $object->{_id} = $new_one->{_id};
 }
 
-$t->get_ok('/api/v1/bazs.json')
+$t->get_ok('/api/v1/bazzes.json')
     ->status_is(200)
     # ->json_is('/meta/items', 3)
     ->data_is($objects)
@@ -92,13 +92,13 @@ $t->get_ok('/api/v1/bazs.json')
 ###
 
 foreach my $object (@$objects) {
-    $t->get_ok("/api/v1/bazs/$object->{_id}.json")
+    $t->get_ok("/api/v1/bazzes/$object->{_id}.json")
         ->status_is(200)
         ->json_is('/data' => $object)
         ;
 }
 
-$t->get_ok('/api/v1/bazs/not_existing_id.json')
+$t->get_ok('/api/v1/bazzes/not_existing_id.json')
     ->status_is(404)
     ;
 
@@ -109,13 +109,13 @@ $t->get_ok('/api/v1/bazs/not_existing_id.json')
 ### Testing add action.
 ###
 
-$t->post_ok('/api/v1/bazs.json')
+$t->post_ok('/api/v1/bazzes.json')
     ->status_is(400)
     ->json_is('/message', 'EMPTY_JSON_PARAMS')
     ;
 
 my $new_object = { name => 'new_object' };
-$t->post_ok('/api/v1/bazs.json' => json => {
+$t->post_ok('/api/v1/bazzes.json' => json => {
         %$new_object,
     })
     ->status_is(200)
@@ -124,7 +124,7 @@ $t->post_ok('/api/v1/bazs.json' => json => {
 my $new_id = $t->tx->res->json->{data}{_id};
 $new_object->{_id} = $new_id;
 
-$t->get_ok("/api/v1/bazs/$new_id.json")
+$t->get_ok("/api/v1/bazzes/$new_id.json")
     ->status_is(200)
     ->json_is('/data' => {
         %$new_object,
@@ -132,7 +132,7 @@ $t->get_ok("/api/v1/bazs/$new_id.json")
     ;
 
 push @$objects, $new_object;
-$t->get_ok('/api/v1/bazs.json')
+$t->get_ok('/api/v1/bazzes.json')
     ->status_is(200)
     # ->json_is('/meta/items', 4)
     ->data_is($objects)
@@ -143,20 +143,20 @@ $t->get_ok('/api/v1/bazs.json')
 ### Testing update action.
 ###
 
-$t->put_ok("/api/v1/bazs/$new_id.json")
+$t->put_ok("/api/v1/bazzes/$new_id.json")
     ->status_is(400)
     ->json_is('/message', 'EMPTY_JSON_PARAMS')
     ;
 
 $new_object->{name} = 'object_updated';
-$t->put_ok("/api/v1/bazs/$new_id.json" => json => {
+$t->put_ok("/api/v1/bazzes/$new_id.json" => json => {
         name => $new_object->{name},
     })
     ->status_is(200)
     ->data_is($new_object)
     ;
 
-$t->get_ok('/api/v1/bazs.json')
+$t->get_ok('/api/v1/bazzes.json')
     ->status_is(200)
     # ->json_is('/meta/items', 4)
     ->data_is($objects)
@@ -167,7 +167,7 @@ $t->get_ok('/api/v1/bazs.json')
 ### Testing patch action.
 ###
 
-$t->patch_ok("/api/v1/bazs/$new_id.json")
+$t->patch_ok("/api/v1/bazzes/$new_id.json")
     ->status_is(404)
     ;
 
@@ -176,13 +176,13 @@ $t->patch_ok("/api/v1/bazs/$new_id.json")
 ### Testing delete action.
 ###
 
-$t->delete_ok("/api/v1/bazs/$new_id.json")
+$t->delete_ok("/api/v1/bazzes/$new_id.json")
     ->status_is(200)
     ->data_is($new_object)
     ;
 
 pop @$objects;
-$t->get_ok('/api/v1/bazs.json')
+$t->get_ok('/api/v1/bazzes.json')
     ->status_is(200)
     # ->json_is('/meta/items', 3)
     ->data_is($objects)

@@ -26,7 +26,7 @@ use Carp 'confess';
 $SIG{__DIE__} = \&confess;
 
 use YAML::XS;
-use Text::Pluralize;
+use Lingua::EN::Inflect qw( PL );
 use Dotenv -load => 'config/.env';
 
 use Mojo::Base 'Mojolicious';
@@ -130,7 +130,7 @@ sub setup_routing {
         my $base_route = $rh->{alt_route} || do {
             my @package_name = split '::', $rh->{package_name};
 
-            $package_name[-1] = pluralize($package_name[-1], 2) if $self->config->{route_pluralization};
+            $package_name[-1] = PL($package_name[-1], 10) if $self->config->{route_pluralization};
 
             join '/', $route_prefix, map { decamelize $_ } @package_name;
         };

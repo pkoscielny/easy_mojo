@@ -2,7 +2,8 @@ requires 'Mojolicious', '9.25';
 requires 'JSON::XS', '4.03';
 requires 'YAML::XS', '0.86';
 # requires 'Template::Simple', '0.06';
-requires 'Text::Pluralize', '1.1';  # this lib is poor. Try to find something better.
+# requires 'Text::Pluralize', '1.1';
+requires 'Lingua::EN::Inflect', '1.905';
 requires 'Dotenv', '0.002';
 
 requires 'Test::MockModule', 'v0.177.0';
