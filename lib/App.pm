@@ -11,7 +11,6 @@ TODO:
  - test: no logs
  - dev: logs on stderr
 * add scaffolding
-* clean up the mess in env variables 
 * add meta implementation: elapsed_time for getting data from model; items for list, etc
 * add onlice API doc (e.g. Swagger)
 * run scanner: https://github.com/aquasecurity/trivy
@@ -40,7 +39,6 @@ my @supported_response_formats = qw/txt csv html json yaml xls xlsx/;
 # After startup all controller classes will be load.
 sub startup {
     my ($self) = @_;
-    print 'Running mode: ', $self->mode, "\n";
 
     $self->setup_plugins();
 
@@ -52,6 +50,8 @@ sub startup {
     $self->setup_routing();
 
     # $self->setup_hooks();
+
+    $self->app->log->info('Running mode: '. $self->mode);
 }
 
 

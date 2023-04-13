@@ -5,7 +5,6 @@ DOCKER_COMPOSE_FILE="$PWD/docker/docker-compose.yml"
 DETACH_MODE="-d"
 SERVICE_ID=""
 DOTENV="$PWD/config/.env"
-DOTENV_TEST="$PWD/config/.env_test"
 
 
 function start {
@@ -41,7 +40,22 @@ function help {
 
 # Export variables.
 if [ -f "$DOTENV" ]; then
-    export $(grep -v '^#' "$DOTENV" | xargs -d '\n')
+    ENV_VARS="$(cat $DOTENV | awk '!/^\s*#/' | awk '!/^\s*$/')"
+
+    eval "$(
+        printf '%s\n' "$ENV_VARS" | while IFS='' read -r line; do
+            key=$(printf '%s\n' "$line" | sed 's/"/\\"/g' | cut -d '=' -f 1)
+            key_exported=$(export -p | grep "$key"=)
+
+            # Use env variable only if not exported yet.
+            if [ -z "$key_exported" ]; then
+                value=$(printf '%s\n' "$line" | cut -d '=' -f 2- | sed 's/"/\\\"/g')
+                printf '%s\n' "export $key=\"$value\""
+            fi 
+        done
+    )"
+
+    #export $(grep -v '^#' "$DOTENV" | xargs -d '\n')
 fi
 export USER_ID=$(id -u)
 export GROUP_ID=$(id -g)

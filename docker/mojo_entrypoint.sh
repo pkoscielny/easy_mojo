@@ -2,9 +2,12 @@
 
 carton install
 
-if [ -n "$MOJO_DB_MIGRATIONS" ] && [ "$MOJO_DB_MIGRATIONS" -eq 1 ] ; then
+if [ -n "$MOJO_DB_CREATE" ] && [ "$MOJO_DB_CREATE" -eq 1 ] ; then
+    echo "Creating databases ..."
     carton exec 'make prepare_database'
+fi 
 
+if [ -n "$MOJO_DB_MIGRATIONS" ] && [ "$MOJO_DB_MIGRATIONS" -eq 1 ] ; then
     echo "Running migrations ..."
     carton exec 'perl bin/run_migrations.pl'
 fi 

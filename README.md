@@ -9,8 +9,7 @@ A small example of Mojolicious power.
 * Simple creation and configuration of new resources
 * Easily create custom actions
 * Resources based on various databases and other webservices
-* Content negotiation
-* Supported response formats: JSON, YAML, CSV, HTML, XLS, XLSX, text
+* Content negotiation (supported response formats: JSON, YAML, CSV, HTML, XLS, XLSX, text)
 * Database migrations
 * Dockerizing everything
 
@@ -30,18 +29,24 @@ Interactive mode for development:
 ```
 bin/docker.sh --start -i
 ```
-You can control running migrations `(set MOJO_DB_MIGRATIONS to 0 or 1)`
-or operating mode `(set MOJO_ENV to dev, test, prod)`.
+You can control specific behaviors:
+* creating databases `(env variable MOJO_DB_CREATE to 1 or 0 - by default)`
+* running migrations `(env variable MOJO_DB_MIGRATIONS to 1 or 0 - by default)`
+* operating mode `(env variable MOJO_ENV to prod, test, dev - by default)`
 
-All of these env variables are set in the docker-compose.yml
+All of these env variables are set in the `docker-compose.yml`
 
 Setting the `dev` or `test` mode will start Morbo. Other modes will start the Hypnotoad server.
 
+At the beginning:
+```
+MOJO_DB_CREATE=1 MOJO_DB_MIGRATIONS=1 bin/docker.sh --start -i
+```
 
 ## Run specific commands
 
 
-### Run BASH console inside a easy_mojo container:
+### Run BASH console inside the easy_mojo container:
 ```
 bin/emojo
 ```
